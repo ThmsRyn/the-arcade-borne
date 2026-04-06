@@ -126,6 +126,131 @@ const SVG_DEFS = {
   <rect x="26" y="9"  width="2"  height="2" fill="${c2}"/>
 </svg>`,
 
+  // ── DRAGONS (Firewall Blitz) ──────────────────────────────
+
+  iron_dragon: (c1, c2) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- wings -->
+  <rect x="0"  y="8"  width="8"  height="12" fill="${c1}"/>
+  <rect x="1"  y="7"  width="6"  height="2"  fill="${c1}"/>
+  <rect x="24" y="8"  width="8"  height="12" fill="${c1}"/>
+  <rect x="25" y="7"  width="6"  height="2"  fill="${c1}"/>
+  <!-- wing membrane highlights -->
+  <rect x="2"  y="10" width="4"  height="8"  fill="${c2}"/>
+  <rect x="26" y="10" width="4"  height="8"  fill="${c2}"/>
+  <!-- body -->
+  <rect x="9"  y="10" width="14" height="14" fill="${c1}"/>
+  <!-- neck -->
+  <rect x="12" y="5"  width="8"  height="7"  fill="${c1}"/>
+  <!-- head -->
+  <rect x="10" y="2"  width="12" height="6"  fill="${c1}"/>
+  <!-- snout -->
+  <rect x="8"  y="4"  width="4"  height="4"  fill="${c1}"/>
+  <rect x="20" y="4"  width="4"  height="4"  fill="${c1}"/>
+  <!-- eyes (slit pupils) -->
+  <rect x="11" y="3"  width="3"  height="3"  fill="#ffff00"/>
+  <rect x="18" y="3"  width="3"  height="3"  fill="#ffff00"/>
+  <rect x="12" y="3"  width="1"  height="3"  fill="#1a1a1a"/>
+  <rect x="19" y="3"  width="1"  height="3"  fill="#1a1a1a"/>
+  <!-- horns -->
+  <rect x="11" y="0"  width="3"  height="3"  fill="${c1}"/>
+  <rect x="10" y="0"  width="2"  height="2"  fill="${c1}"/>
+  <rect x="18" y="0"  width="3"  height="3"  fill="${c1}"/>
+  <rect x="20" y="0"  width="2"  height="2"  fill="${c1}"/>
+  <!-- fire breath -->
+  <rect x="4"  y="5"  width="4"  height="2"  fill="#ff6600"/>
+  <rect x="2"  y="4"  width="3"  height="2"  fill="#ffaa00"/>
+  <rect x="0"  y="3"  width="3"  height="2"  fill="#ffff00"/>
+  <!-- belly scales -->
+  <rect x="11" y="13" width="10" height="9"  fill="${c2}"/>
+  <!-- tail -->
+  <rect x="14" y="24" width="4"  height="4"  fill="${c1}"/>
+  <rect x="15" y="28" width="3"  height="3"  fill="${c1}"/>
+  <rect x="16" y="30" width="2"  height="2"  fill="${c1}"/>
+  <!-- claws -->
+  <rect x="9"  y="24" width="3"  height="3"  fill="${c1}"/>
+  <rect x="8"  y="26" width="2"  height="2"  fill="${c2}"/>
+  <rect x="20" y="24" width="3"  height="3"  fill="${c1}"/>
+  <rect x="22" y="26" width="2"  height="2"  fill="${c2}"/>
+</svg>`,
+
+  // ── CROWS (DNS Chain) ─────────────────────────────────────
+
+  iron_crow: (c1, c2) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- tail feathers -->
+  <rect x="12" y="26" width="8"  height="5"  fill="${c1}"/>
+  <rect x="10" y="27" width="3"  height="4"  fill="${c1}"/>
+  <rect x="19" y="27" width="3"  height="4"  fill="${c1}"/>
+  <!-- body -->
+  <rect x="8"  y="14" width="16" height="14" fill="${c1}"/>
+  <!-- wings spread -->
+  <rect x="1"  y="12" width="9"  height="8"  fill="${c1}"/>
+  <rect x="22" y="12" width="9"  height="8"  fill="${c1}"/>
+  <!-- wing tips -->
+  <rect x="0"  y="14" width="3"  height="5"  fill="${c1}"/>
+  <rect x="29" y="14" width="3"  height="5"  fill="${c1}"/>
+  <!-- wing highlights -->
+  <rect x="2"  y="13" width="6"  height="5"  fill="${c2}"/>
+  <rect x="24" y="13" width="6"  height="5"  fill="${c2}"/>
+  <!-- neck + head -->
+  <rect x="11" y="8"  width="10" height="8"  fill="${c1}"/>
+  <rect x="10" y="6"  width="12" height="5"  fill="${c1}"/>
+  <!-- beak (sharp) -->
+  <rect x="6"  y="8"  width="6"  height="3"  fill="${c1}"/>
+  <rect x="4"  y="9"  width="4"  height="2"  fill="${c1}"/>
+  <!-- eye -->
+  <rect x="13" y="7"  width="3"  height="3"  fill="#1a1a1a"/>
+  <rect x="14" y="7"  width="1"  height="1"  fill="${c2}"/>
+  <!-- iridescent sheen on wing -->
+  <rect x="3"  y="15" width="2"  height="2"  fill="#6644ff"/>
+  <rect x="27" y="15" width="2"  height="2"  fill="#6644ff"/>
+  <!-- feet / talons -->
+  <rect x="11" y="28" width="3"  height="3"  fill="${c1}"/>
+  <rect x="9"  y="30" width="2"  height="2"  fill="${c1}"/>
+  <rect x="18" y="28" width="3"  height="3"  fill="${c1}"/>
+  <rect x="21" y="30" width="2"  height="2"  fill="${c1}"/>
+</svg>`,
+
+  // ── WOLVES (Packet Tracer) ────────────────────────────────
+
+  iron_wolf: (c1, c2) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- ears (pointed) -->
+  <rect x="5"  y="2"  width="5"  height="7"  fill="${c1}"/>
+  <rect x="6"  y="3"  width="3"  height="5"  fill="${c2}"/>
+  <rect x="22" y="2"  width="5"  height="7"  fill="${c1}"/>
+  <rect x="23" y="3"  width="3"  height="5"  fill="${c2}"/>
+  <!-- head -->
+  <rect x="7"  y="7"  width="18" height="13" fill="${c1}"/>
+  <!-- muzzle (elongated) -->
+  <rect x="9"  y="15" width="14" height="6"  fill="${c2}"/>
+  <rect x="7"  y="13" width="4"  height="5"  fill="${c2}"/>
+  <rect x="21" y="13" width="4"  height="5"  fill="${c2}"/>
+  <!-- eyes (amber) -->
+  <rect x="9"  y="10" width="4"  height="4"  fill="#ffaa00"/>
+  <rect x="19" y="10" width="4"  height="4"  fill="#ffaa00"/>
+  <rect x="10" y="11" width="2"  height="2"  fill="#1a1a1a"/>
+  <rect x="20" y="11" width="2"  height="2"  fill="#1a1a1a"/>
+  <rect x="10" y="11" width="1"  height="1"  fill="${c2}"/>
+  <rect x="20" y="11" width="1"  height="1"  fill="${c2}"/>
+  <!-- nose (black) -->
+  <rect x="14" y="15" width="4"  height="3"  fill="#1a1a1a"/>
+  <!-- body -->
+  <rect x="8"  y="20" width="16" height="9"  fill="${c1}"/>
+  <!-- legs -->
+  <rect x="8"  y="27" width="4"  height="5"  fill="${c1}"/>
+  <rect x="13" y="27" width="4"  height="5"  fill="${c1}"/>
+  <rect x="15" y="27" width="4"  height="5"  fill="${c1}"/>
+  <rect x="20" y="27" width="4"  height="5"  fill="${c1}"/>
+  <!-- tail (bushy, raised) -->
+  <rect x="24" y="14" width="5"  height="10" fill="${c1}"/>
+  <rect x="25" y="13" width="5"  height="3"  fill="${c1}"/>
+  <rect x="26" y="11" width="4"  height="3"  fill="${c2}"/>
+  <!-- fur texture -->
+  <rect x="11" y="21" width="10" height="6"  fill="${c2}"/>
+</svg>`,
+
   // ── FOXES ─────────────────────────────────────────────────────
 
   iron_fox: (c1, c2) => `
@@ -193,6 +318,51 @@ const SVG_DEFS = {
   <rect x="13" y="28" width="3" height="3" fill="#ffb300"/>
   <rect x="17" y="28" width="3" height="3" fill="#ffb300"/>
   <rect x="21" y="28" width="3" height="3" fill="#ffb300"/>
+</svg>`,
+
+  // ── DEER (VLAN Master) ────────────────────────────────────
+
+  iron_deer: (c1, c2) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- antlers left -->
+  <rect x="4"  y="0"  width="2"  height="7"  fill="${c1}"/>
+  <rect x="2"  y="2"  width="4"  height="2"  fill="${c1}"/>
+  <rect x="1"  y="0"  width="2"  height="3"  fill="${c1}"/>
+  <rect x="5"  y="0"  width="2"  height="3"  fill="${c1}"/>
+  <!-- antlers right -->
+  <rect x="26" y="0"  width="2"  height="7"  fill="${c1}"/>
+  <rect x="26" y="2"  width="4"  height="2"  fill="${c1}"/>
+  <rect x="27" y="0"  width="2"  height="3"  fill="${c1}"/>
+  <rect x="29" y="0"  width="2"  height="3"  fill="${c1}"/>
+  <!-- head -->
+  <rect x="9"  y="5"  width="14" height="11" fill="${c1}"/>
+  <!-- muzzle -->
+  <rect x="11" y="13" width="10" height="5"  fill="${c2}"/>
+  <!-- eyes -->
+  <rect x="10" y="8"  width="3"  height="3"  fill="#1a1a1a"/>
+  <rect x="19" y="8"  width="3"  height="3"  fill="#1a1a1a"/>
+  <rect x="11" y="9"  width="1"  height="1"  fill="${c2}"/>
+  <rect x="20" y="9"  width="1"  height="1"  fill="${c2}"/>
+  <!-- nose -->
+  <rect x="14" y="14" width="4"  height="2"  fill="#1a1a1a"/>
+  <!-- neck -->
+  <rect x="12" y="15" width="8"  height="5"  fill="${c1}"/>
+  <!-- body -->
+  <rect x="7"  y="19" width="18" height="10" fill="${c1}"/>
+  <!-- belly -->
+  <rect x="10" y="21" width="12" height="7"  fill="${c2}"/>
+  <!-- legs -->
+  <rect x="8"  y="27" width="3"  height="5"  fill="${c1}"/>
+  <rect x="12" y="27" width="3"  height="5"  fill="${c1}"/>
+  <rect x="17" y="27" width="3"  height="5"  fill="${c1}"/>
+  <rect x="21" y="27" width="3"  height="5"  fill="${c1}"/>
+  <!-- hooves -->
+  <rect x="8"  y="30" width="3"  height="2"  fill="#1a1a1a"/>
+  <rect x="12" y="30" width="3"  height="2"  fill="#1a1a1a"/>
+  <rect x="17" y="30" width="3"  height="2"  fill="#1a1a1a"/>
+  <rect x="21" y="30" width="3"  height="2"  fill="#1a1a1a"/>
+  <!-- tail (white) -->
+  <rect x="24" y="19" width="4"  height="4"  fill="#ffffff"/>
 </svg>`,
 
   // ── TURTLES ───────────────────────────────────────────────────
@@ -490,6 +660,158 @@ const REWARDS = {
     get svg()    { return buildSVG('turtle', 'gold'); }
   },
 
+  // ── DRAGONS (Firewall Blitz) ────────────────────────────
+
+  iron_dragon: {
+    id:          'iron_dragon',
+    name:        'Dragon de Fer',
+    name_en:     'Iron Dragon',
+    description: 'Terminer Firewall Blitz une fois',
+    desc_en:     'Complete Firewall Blitz once',
+    animal:      'dragon',
+    tier:        'iron',
+    game:        'firewall-blitz',
+    get svg()    { return buildSVG('dragon', 'iron'); }
+  },
+
+  bronze_dragon: {
+    id:          'bronze_dragon',
+    name:        'Dragon de Bronze',
+    name_en:     'Bronze Dragon',
+    description: 'Firewall Blitz — score >= 500',
+    desc_en:     'Firewall Blitz — score >= 500',
+    animal:      'dragon',
+    tier:        'bronze',
+    game:        'firewall-blitz',
+    get svg()    { return buildSVG('dragon', 'bronze'); }
+  },
+
+  gold_dragon: {
+    id:          'gold_dragon',
+    name:        'Dragon d\'Or',
+    name_en:     'Gold Dragon',
+    description: 'Firewall Blitz — score >= 800 en HARD',
+    desc_en:     'Firewall Blitz — score >= 800 on HARD',
+    animal:      'dragon',
+    tier:        'gold',
+    game:        'firewall-blitz',
+    get svg()    { return buildSVG('dragon', 'gold'); }
+  },
+
+  // ── CROWS (DNS Chain) ────────────────────────────────────
+
+  iron_crow: {
+    id:          'iron_crow',
+    name:        'Corbeau de Fer',
+    name_en:     'Iron Crow',
+    description: 'Terminer DNS Chain une fois',
+    desc_en:     'Complete DNS Chain once',
+    animal:      'crow',
+    tier:        'iron',
+    game:        'dns-chain',
+    get svg()    { return buildSVG('crow', 'iron'); }
+  },
+
+  bronze_crow: {
+    id:          'bronze_crow',
+    name:        'Corbeau de Bronze',
+    name_en:     'Bronze Crow',
+    description: 'DNS Chain — score >= 500',
+    desc_en:     'DNS Chain — score >= 500',
+    animal:      'crow',
+    tier:        'bronze',
+    game:        'dns-chain',
+    get svg()    { return buildSVG('crow', 'bronze'); }
+  },
+
+  gold_crow: {
+    id:          'gold_crow',
+    name:        'Corbeau d\'Or',
+    name_en:     'Gold Crow',
+    description: 'DNS Chain — score >= 800 en HARD',
+    desc_en:     'DNS Chain — score >= 800 on HARD',
+    animal:      'crow',
+    tier:        'gold',
+    game:        'dns-chain',
+    get svg()    { return buildSVG('crow', 'gold'); }
+  },
+
+  // ── WOLVES (Packet Tracer) ───────────────────────────────
+
+  iron_wolf: {
+    id:          'iron_wolf',
+    name:        'Loup de Fer',
+    name_en:     'Iron Wolf',
+    description: 'Terminer Packet Tracer une fois',
+    desc_en:     'Complete Packet Tracer once',
+    animal:      'wolf',
+    tier:        'iron',
+    game:        'packet-tracer',
+    get svg()    { return buildSVG('wolf', 'iron'); }
+  },
+
+  bronze_wolf: {
+    id:          'bronze_wolf',
+    name:        'Loup de Bronze',
+    name_en:     'Bronze Wolf',
+    description: 'Packet Tracer — score >= 500',
+    desc_en:     'Packet Tracer — score >= 500',
+    animal:      'wolf',
+    tier:        'bronze',
+    game:        'packet-tracer',
+    get svg()    { return buildSVG('wolf', 'bronze'); }
+  },
+
+  gold_wolf: {
+    id:          'gold_wolf',
+    name:        'Loup d\'Or',
+    name_en:     'Gold Wolf',
+    description: 'Packet Tracer — score >= 800 en HARD',
+    desc_en:     'Packet Tracer — score >= 800 on HARD',
+    animal:      'wolf',
+    tier:        'gold',
+    game:        'packet-tracer',
+    get svg()    { return buildSVG('wolf', 'gold'); }
+  },
+
+  // ── DEER (VLAN Master) ───────────────────────────────────
+
+  iron_deer: {
+    id:          'iron_deer',
+    name:        'Cerf de Fer',
+    name_en:     'Iron Deer',
+    description: 'Terminer VLAN Master une fois',
+    desc_en:     'Complete VLAN Master once',
+    animal:      'deer',
+    tier:        'iron',
+    game:        'vlan-master',
+    get svg()    { return buildSVG('deer', 'iron'); }
+  },
+
+  bronze_deer: {
+    id:          'bronze_deer',
+    name:        'Cerf de Bronze',
+    name_en:     'Bronze Deer',
+    description: 'VLAN Master — score >= 500',
+    desc_en:     'VLAN Master — score >= 500',
+    animal:      'deer',
+    tier:        'bronze',
+    game:        'vlan-master',
+    get svg()    { return buildSVG('deer', 'bronze'); }
+  },
+
+  gold_deer: {
+    id:          'gold_deer',
+    name:        'Cerf d\'Or',
+    name_en:     'Gold Deer',
+    description: 'VLAN Master — score >= 800 en HARD',
+    desc_en:     'VLAN Master — score >= 800 on HARD',
+    animal:      'deer',
+    tier:        'gold',
+    game:        'vlan-master',
+    get svg()    { return buildSVG('deer', 'gold'); }
+  },
+
   // ── SNAKES (Cable Chaos) ─────────────────────────────────────
 
   iron_snake: {
@@ -537,27 +859,27 @@ const REWARDS = {
 const REWARD_CONDITIONS = {
 
   iron_cat(all) {
-    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos'];
+    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos', 'firewall-blitz', 'dns-chain', 'packet-tracer', 'vlan-master'];
     return games.every(g => all.some(e => e.game === g));
   },
 
   bronze_cat(all) {
-    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos'];
+    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos', 'firewall-blitz', 'dns-chain', 'packet-tracer', 'vlan-master'];
     return games.every(g => all.some(e => e.game === g && e.score > 0));
   },
 
   silver_cat(all) {
-    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos'];
+    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos', 'firewall-blitz', 'dns-chain', 'packet-tracer', 'vlan-master'];
     return games.every(g => all.some(e => e.game === g && e.score >= 500));
   },
 
   gold_cat(all) {
-    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos'];
+    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos', 'firewall-blitz', 'dns-chain', 'packet-tracer', 'vlan-master'];
     return games.every(g => all.some(e => e.game === g && e.score >= 1000));
   },
 
   platinum_cat(all) {
-    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos'];
+    const games = ['port-match', 'osi-puzzle', 'protocol-quiz', 'subnet-challenge', 'cable-chaos', 'firewall-blitz', 'dns-chain', 'packet-tracer', 'vlan-master'];
     const highEnough = games.every(g => all.some(e => e.game === g && e.score >= 1500));
     const hardDone   = games.every(g => all.some(e => e.game === g && e.difficulty === 'hard'));
     return highEnough && hardDone;
@@ -586,7 +908,27 @@ const REWARD_CONDITIONS = {
   // Cable Chaos
   iron_snake(all)   { return all.some(e => e.game === 'cable-chaos'); },
   bronze_snake(all) { return all.some(e => e.game === 'cable-chaos' && e.score >= 500); },
-  gold_snake(all)   { return all.some(e => e.game === 'cable-chaos' && e.difficulty === 'hard' && e.score >= 800); }
+  gold_snake(all)   { return all.some(e => e.game === 'cable-chaos' && e.difficulty === 'hard' && e.score >= 800); },
+
+  // Firewall Blitz
+  iron_dragon(all)   { return all.some(e => e.game === 'firewall-blitz'); },
+  bronze_dragon(all) { return all.some(e => e.game === 'firewall-blitz' && e.score >= 500); },
+  gold_dragon(all)   { return all.some(e => e.game === 'firewall-blitz' && e.difficulty === 'hard' && e.score >= 800); },
+
+  // DNS Chain
+  iron_crow(all)   { return all.some(e => e.game === 'dns-chain'); },
+  bronze_crow(all) { return all.some(e => e.game === 'dns-chain' && e.score >= 500); },
+  gold_crow(all)   { return all.some(e => e.game === 'dns-chain' && e.difficulty === 'hard' && e.score >= 800); },
+
+  // Packet Tracer
+  iron_wolf(all)   { return all.some(e => e.game === 'packet-tracer'); },
+  bronze_wolf(all) { return all.some(e => e.game === 'packet-tracer' && e.score >= 500); },
+  gold_wolf(all)   { return all.some(e => e.game === 'packet-tracer' && e.difficulty === 'hard' && e.score >= 800); },
+
+  // VLAN Master
+  iron_deer(all)   { return all.some(e => e.game === 'vlan-master'); },
+  bronze_deer(all) { return all.some(e => e.game === 'vlan-master' && e.score >= 500); },
+  gold_deer(all)   { return all.some(e => e.game === 'vlan-master' && e.difficulty === 'hard' && e.score >= 800); }
 };
 
 // ============================================================

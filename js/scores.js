@@ -239,10 +239,15 @@ const scoresTable = {
     }
 
     const gameLabels = {
-      'port-match': i18n.t('game_port_match'),
-      'osi-puzzle': i18n.t('game_osi_puzzle'),
-      'protocol-quiz': i18n.t('game_protocol_quiz'),
-      'subnet-challenge': i18n.t('game_subnet_challenge')
+      'port-match':       i18n.t('game_port_match'),
+      'osi-puzzle':       i18n.t('game_osi_puzzle'),
+      'protocol-quiz':    i18n.t('game_protocol_quiz'),
+      'subnet-challenge': i18n.t('game_subnet_challenge'),
+      'cable-chaos':      i18n.t('game_cable_chaos'),
+      'firewall-blitz':   i18n.t('game_firewall_blitz'),
+      'dns-chain':        i18n.t('game_dns_chain'),
+      'packet-tracer':    i18n.t('game_packet_tracer'),
+      'vlan-master':      i18n.t('game_vlan_master'),
     };
 
     const diffBadge = (diff) => {

@@ -156,6 +156,48 @@ const TRANSLATIONS = {
 
     // How to Play toggle
     htp_collapse: 'COMMENT JOUER',
+
+    // Firewall Blitz
+    game_firewall_blitz:   'FIREWALL BLITZ',
+    desc_firewall_blitz:   'Acceptez ou bloquez les paquets',
+    fb_diff_easy_sub:      'REGLES SIMPLES',
+    fb_diff_medium_sub:    'ZONES + DIRECTIONS',
+    fb_diff_hard_sub:      'STATEFUL + NAT + TIMER',
+    fb_policy_title:       'POLITIQUE FIREWALL',
+    fb_packet_label:       'PAQUET A TRAITER',
+    fb_accept:             'ACCEPT',
+    fb_deny:               'DENY',
+    htp_firewall_blitz:    'La politique firewall est affichee en haut. Un paquet arrive — lis sa source, sa destination et son port. Clique ACCEPT s\'il correspond a une regle d\'autorisation, DENY sinon. En mode DIFFICILE, un timer par paquet s\'ajoute : reagis vite. Erreur = -80 pts et -5s sur le timer global.',
+
+    // DNS Chain
+    game_dns_chain:        'DNS CHAIN',
+    desc_dns_chain:        'Reconstituez la chaine DNS',
+    dc_diff_easy_sub:      'RESOLUTION A / CACHE',
+    dc_diff_medium_sub:    'MX / CNAME / PTR',
+    dc_diff_hard_sub:      'DNSSEC + SPLIT-HORIZON',
+    dc_pieces_title:       'ETAPES DISPONIBLES',
+    dc_slots_title:        'ORDRE DE RESOLUTION',
+    dc_validate:           'VALIDER L\'ORDRE',
+    htp_dns_chain:         'Une chaine de resolution DNS est a reconstituer. Clique une etape dans la colonne gauche pour la selectionner (surlignee), puis clique le slot cible dans la colonne droite pour la placer. Clique un slot rempli pour retirer l\'etape. Valide quand toutes les etapes sont placees dans le bon ordre. En DIFFICILE : DNSSEC et Split-Horizon avec timer serre. Erreur = -80 pts et -8s.',
+
+    // Packet Tracer
+    game_packet_tracer:    'PACKET TRACER',
+    desc_packet_tracer:    'Suivez le paquet saut par saut',
+    pt_diff_easy_sub:      'L2 / L3 BASIQUE',
+    pt_diff_medium_sub:    'NAT / ACL / ARP',
+    pt_diff_hard_sub:      'BGP / FRAGMENTATION',
+    pt_device_label:       'EQUIPEMENT ACTIF',
+    htp_packet_tracer:     'Un paquet traverse un reseau saut par saut. A chaque equipement, une question te demande quelle action il effectue. Choisis la bonne reponse parmi 4 options melangees. Bonne reponse = points. Mauvaise = la correcte est revelee, -60 pts et -8s (medium/hard). En DIFFICILE : BGP, fragmentation, routage asymetrique.',
+
+    // VLAN Master
+    game_vlan_master:      'VLAN MASTER',
+    desc_vlan_master:      'Configurez les ports switch',
+    vm_diff_easy_sub:      'ACCESS PORTS SIMPLE',
+    vm_diff_medium_sub:    'ACCESS + TRUNK + NATIF',
+    vm_diff_hard_sub:      'MULTI-SWITCH + STP + ERREURS',
+    vm_policy_title:       'POLITIQUE VLAN',
+    vm_validate:           'VALIDER LA CONFIG',
+    htp_vlan_master:       'Une politique VLAN est donnee. Pour chaque port du switch, selectionne le bon mode (ACCESS ou TRUNK), le bon VLAN d\'acces, et en mode MOYEN/DIFFICILE le VLAN natif et les VLANs autorises sur les trunks. En mode DIFFICILE, certains ports sont deja configures avec des erreurs — flagge ceux qui sont incorrects. Valide quand tous les ports sont corrects.',
   },
 
   en: {
@@ -310,6 +352,48 @@ const TRANSLATIONS = {
 
     // How to Play toggle
     htp_collapse: 'HOW TO PLAY',
+
+    // Firewall Blitz
+    game_firewall_blitz:   'FIREWALL BLITZ',
+    desc_firewall_blitz:   'Accept or block packets',
+    fb_diff_easy_sub:      'SIMPLE RULES',
+    fb_diff_medium_sub:    'ZONES + DIRECTIONS',
+    fb_diff_hard_sub:      'STATEFUL + NAT + TIMER',
+    fb_policy_title:       'FIREWALL POLICY',
+    fb_packet_label:       'INCOMING PACKET',
+    fb_accept:             'ACCEPT',
+    fb_deny:               'DENY',
+    htp_firewall_blitz:    'The firewall policy is displayed at the top. A packet arrives — read its source, destination and port. Click ACCEPT if it matches an allow rule, DENY otherwise. In HARD mode, a per-packet timer is added: react fast. Wrong answer = -80 pts and -5s on the global timer.',
+
+    // DNS Chain
+    game_dns_chain:        'DNS CHAIN',
+    desc_dns_chain:        'Rebuild the DNS resolution chain',
+    dc_diff_easy_sub:      'A RECORD / CACHE',
+    dc_diff_medium_sub:    'MX / CNAME / PTR',
+    dc_diff_hard_sub:      'DNSSEC + SPLIT-HORIZON',
+    dc_pieces_title:       'AVAILABLE STEPS',
+    dc_slots_title:        'RESOLUTION ORDER',
+    dc_validate:           'VALIDATE ORDER',
+    htp_dns_chain:         'A DNS resolution chain must be rebuilt. Click a step in the left column to select it (highlighted), then click the target slot in the right column to place it. Click a filled slot to remove the step. Validate when all steps are in the correct order. In HARD: DNSSEC and Split-Horizon with tight timer. Wrong = -80 pts and -8s.',
+
+    // Packet Tracer
+    game_packet_tracer:    'PACKET TRACER',
+    desc_packet_tracer:    'Follow the packet hop by hop',
+    pt_diff_easy_sub:      'L2 / L3 BASIC',
+    pt_diff_medium_sub:    'NAT / ACL / ARP',
+    pt_diff_hard_sub:      'BGP / FRAGMENTATION',
+    pt_device_label:       'ACTIVE DEVICE',
+    htp_packet_tracer:     'A packet crosses a network hop by hop. At each device, a question asks what action it takes. Choose the correct answer from 4 shuffled options. Correct = points. Wrong = correct answer revealed, -60 pts and -8s (medium/hard). In HARD: BGP, IP fragmentation, asymmetric routing.',
+
+    // VLAN Master
+    game_vlan_master:      'VLAN MASTER',
+    desc_vlan_master:      'Configure the switch ports',
+    vm_diff_easy_sub:      'SIMPLE ACCESS PORTS',
+    vm_diff_medium_sub:    'ACCESS + TRUNK + NATIVE',
+    vm_diff_hard_sub:      'MULTI-SWITCH + STP + ERRORS',
+    vm_policy_title:       'VLAN POLICY',
+    vm_validate:           'VALIDATE CONFIG',
+    htp_vlan_master:       'A VLAN policy is given. For each switch port, select the correct mode (ACCESS or TRUNK), the right access VLAN, and in MEDIUM/HARD mode the native VLAN and allowed VLANs on trunks. In HARD mode, some ports are already configured with errors — flag the misconfigured ones. Validate when all ports are correctly set.',
   }
 };
 

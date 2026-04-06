@@ -1782,3 +1782,278 @@ a:hover {
     padding: 16px 8px;
   }
 }
+
+/* ============================================================
+   FIREWALL BLITZ
+   ============================================================ */
+
+.fb-policy-panel {
+  background: rgba(0,255,255,0.05);
+  border: 1px solid var(--cyan);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.fb-policy-panel__title {
+  font-size: 0.35rem;
+  color: var(--cyan);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.fb-policy-list { list-style: none; padding: 0; }
+
+.fb-rule {
+  font-size: 0.28rem;
+  color: #ccc;
+  padding: 3px 0;
+  border-bottom: 1px solid #222;
+  line-height: 1.6;
+}
+
+.fb-packet-zone { text-align: center; margin: 16px 0; }
+
+.fb-packet-label {
+  font-size: 0.3rem;
+  color: var(--yellow);
+  margin-bottom: 6px;
+  letter-spacing: 0.1em;
+}
+
+.fb-packet {
+  font-size: 0.38rem;
+  color: var(--white);
+  background: #111;
+  border: 2px solid var(--magenta);
+  box-shadow: 0 0 10px var(--magenta);
+  padding: 12px 20px;
+  margin: 8px auto;
+  max-width: 560px;
+  word-break: break-all;
+  line-height: 1.8;
+}
+
+.fb-packet-progress { font-size: 0.28rem; color: #888; margin-top: 4px; }
+
+.fb-timer-bar-wrap {
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  margin: 8px auto;
+  max-width: 400px;
+  overflow: hidden;
+}
+
+.fb-timer-bar {
+  height: 100%;
+  width: 100%;
+  background: var(--green);
+  transition: width 0.05s linear;
+}
+
+.fb-verdict-zone {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.fb-verdict-btn {
+  font-family: var(--font);
+  font-size: 0.55rem;
+  padding: 16px 36px;
+  border: 3px solid;
+  cursor: pointer;
+  background: transparent;
+  letter-spacing: 0.08em;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.fb-verdict-btn--accept-style { color: var(--green); border-color: var(--green); }
+.fb-verdict-btn--accept-style:hover:not(:disabled) { background: rgba(0,255,0,0.12); box-shadow: 0 0 12px var(--green); }
+.fb-verdict-btn--deny-style { color: var(--red); border-color: var(--red); }
+.fb-verdict-btn--deny-style:hover:not(:disabled) { background: rgba(255,0,0,0.12); box-shadow: 0 0 12px var(--red); }
+.fb-verdict-btn--correct { background: rgba(0,255,0,0.2) !important; box-shadow: 0 0 16px var(--green) !important; }
+.fb-verdict-btn--wrong   { background: rgba(255,0,0,0.2) !important; box-shadow: 0 0 16px var(--red) !important; }
+.fb-verdict-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ============================================================
+   DNS CHAIN
+   ============================================================ */
+
+.dc-chain-info { text-align: center; margin-bottom: 14px; }
+
+.dc-chain-title { font-size: 0.38rem; color: var(--cyan); margin-bottom: 4px; }
+
+.dc-chain-desc { font-size: 0.28rem; color: #aaa; line-height: 1.6; }
+
+.dc-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.dc-col__title { font-size: 0.3rem; color: var(--yellow); margin-bottom: 8px; letter-spacing: 0.08em; }
+
+.dc-pieces { display: flex; flex-direction: column; gap: 6px; }
+
+.dc-piece {
+  font-size: 0.24rem;
+  color: var(--white);
+  background: #111;
+  border: 1px solid #444;
+  padding: 8px 10px;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dc-piece:hover { border-color: var(--cyan); background: rgba(0,255,255,0.06); }
+
+.dc-piece--selected {
+  border-color: var(--magenta) !important;
+  background: rgba(255,0,255,0.1) !important;
+  box-shadow: 0 0 8px var(--magenta);
+}
+
+.dc-slots { display: flex; flex-direction: column; gap: 6px; }
+
+.dc-slot {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.24rem;
+  border: 1px solid #333;
+  padding: 8px 10px;
+  cursor: pointer;
+  min-height: 36px;
+  line-height: 1.5;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dc-slot--empty { border-color: #333; color: #555; background: #0d0d0d; }
+.dc-slot--empty:hover { border-color: #666; }
+.dc-slot--filled { border-color: #555; background: #111; color: var(--white); }
+.dc-slot--filled:hover { border-color: var(--red); }
+.dc-slot--wrong { border-color: var(--red) !important; background: rgba(255,0,0,0.1) !important; }
+
+.dc-slot__num { color: var(--cyan); font-size: 0.28rem; flex-shrink: 0; min-width: 16px; }
+.dc-slot__content { flex: 1; }
+
+.dc-hint { font-size: 0.28rem; text-align: center; margin-top: 8px; min-height: 1.4em; }
+.dc-feedback { font-size: 0.3rem; text-align: center; margin-top: 8px; min-height: 1.4em; }
+.dc-feedback--error   { color: var(--red); }
+.dc-feedback--correct { color: var(--green); }
+
+@media (max-width: 600px) { .dc-layout { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   PACKET TRACER
+   ============================================================ */
+
+.pt-topo-panel {
+  background: rgba(0,255,255,0.04);
+  border: 1px solid #333;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.pt-title { font-size: 0.34rem; color: var(--cyan); margin-bottom: 4px; }
+.pt-topo  { font-size: 0.26rem; color: #aaa; line-height: 1.6; }
+
+.pt-hop-panel {
+  background: #0d0d0d;
+  border: 2px solid var(--yellow);
+  box-shadow: 0 0 8px rgba(255,255,0,0.15);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.pt-device-label { font-size: 0.26rem; color: var(--yellow); margin-bottom: 4px; letter-spacing: 0.1em; }
+.pt-device        { font-size: 0.44rem; color: var(--magenta); margin-bottom: 8px; }
+.pt-question      { font-size: 0.28rem; color: var(--white); line-height: 1.7; }
+
+.pt-choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+.pt-choice {
+  font-family: var(--font);
+  font-size: 0.26rem;
+  color: var(--white);
+  background: #111;
+  border: 1px solid #444;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.6;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pt-choice:hover:not(:disabled) { border-color: var(--cyan); background: rgba(0,255,255,0.06); }
+.pt-choice--correct { border-color: var(--green) !important; background: rgba(0,255,0,0.1) !important; box-shadow: 0 0 8px var(--green); }
+.pt-choice--wrong   { border-color: var(--red) !important;   background: rgba(255,0,0,0.1) !important; }
+.pt-choice:disabled { cursor: default; }
+
+.pt-feedback          { font-size: 0.26rem; text-align: center; min-height: 1.4em; line-height: 1.6; }
+.pt-feedback--correct { color: var(--green); }
+.pt-feedback--error   { color: var(--red); }
+
+/* ============================================================
+   VLAN MASTER
+   ============================================================ */
+
+.vm-title { font-size: 0.36rem; color: var(--cyan); text-align: center; margin-bottom: 10px; }
+
+.vm-policy-panel {
+  background: rgba(255,255,0,0.04);
+  border: 1px solid var(--yellow);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+
+.vm-policy-panel__title { font-size: 0.3rem; color: var(--yellow); margin-bottom: 6px; letter-spacing: 0.08em; }
+.vm-policy-list { list-style: none; padding: 0; }
+.vm-rule { font-size: 0.25rem; color: #ccc; padding: 3px 0; border-bottom: 1px solid #1a1a1a; line-height: 1.6; }
+
+.vm-table-wrap { overflow-x: auto; margin-bottom: 12px; }
+
+.vm-table { width: 100%; border-collapse: collapse; font-size: 0.24rem; }
+
+.vm-table th {
+  font-size: 0.22rem;
+  color: var(--cyan);
+  border-bottom: 2px solid var(--cyan);
+  padding: 6px 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.vm-table td { padding: 6px 8px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+.vm-port-id { color: var(--magenta); white-space: nowrap; font-size: 0.25rem; }
+.vm-device  { color: #bbb; font-size: 0.23rem; line-height: 1.4; }
+
+.vm-select {
+  font-family: var(--font);
+  font-size: 0.22rem;
+  background: #111;
+  color: var(--white);
+  border: 1px solid #444;
+  padding: 4px 6px;
+  cursor: pointer;
+  min-width: 80px;
+}
+
+.vm-select:focus { outline: none; border-color: var(--cyan); }
+.vm-select--vlan { min-width: 60px; }
+.vm-select--stp  { min-width: 100px; }
+
+.vm-flag-label { display: flex; align-items: center; gap: 6px; font-size: 0.24rem; color: var(--red); cursor: pointer; }
+.vm-flag-cb    { width: 14px; height: 14px; cursor: pointer; accent-color: var(--red); }
+
+.vm-row--correct td { background: rgba(0,255,0,0.07); }
+.vm-row--wrong   td { background: rgba(255,0,0,0.1); }
+
+.vm-feedback          { font-size: 0.3rem; text-align: center; min-height: 1.4em; margin: 8px 0; }
+.vm-feedback--error   { color: var(--red); }
