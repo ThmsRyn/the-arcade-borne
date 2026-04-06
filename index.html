@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Arcade Borne — Jeux educatifs reseau et systeme. Apprenez les ports, le modele OSI, les protocoles et les sous-reseaux en jouant.">
+  <title>THE ARCADE BORNE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main class="arcade-screen" role="main">
+
+    <!-- HEADER -->
+    <header class="site-header">
+      <span class="site-header__logo">&#x25A0; THOMAS RAYON</span>
+      <div class="site-header__controls">
+        <a href="https://thmsryn.github.io/" class="header-link" target="_blank" rel="noopener" aria-label="Portfolio de Thomas Rayon">[PORTFOLIO]</a>
+        <a href="https://github.com/ThmsRyn" class="header-link" target="_blank" rel="noopener" aria-label="GitHub de Thomas Rayon">[GITHUB]</a>
+        <a href="https://www.linkedin.com/in/thomas-rayon-6a90001b5/" class="header-link" target="_blank" rel="noopener" aria-label="LinkedIn de Thomas Rayon">[LINKEDIN]</a>
+        <button
+          id="lang-toggle"
+          class="btn-lang"
+          aria-label="Changer de langue"
+        >EN</button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="site-title">
+      <h1 class="hero__title" id="site-title" data-i18n="site_title">THE ARCADE BORNE</h1>
+      <p class="hero__subtitle" data-i18n="site_subtitle">APPRENDRE. JOUER. GAGNER.</p>
+    </section>
+
+    <!-- INSERT COIN -->
+    <p class="insert-coin" aria-hidden="true" data-i18n="insert_coin">INSERER UNE PIECE POUR CONTINUER</p>
+
+    <!-- GAME GRID -->
+    <section aria-label="Jeux disponibles">
+      <div class="game-grid">
+
+        <a href="games/port-match.html" class="game-card" aria-label="Port Match — Associez les services a leurs ports">
+          <div class="game-card__icon" aria-hidden="true">&#x1F50C;</div>
+          <h2 class="game-card__title" data-i18n="game_port_match">PORT MATCH</h2>
+          <p class="game-card__desc" data-i18n="desc_port_match">Associez les services a leurs ports</p>
+        </a>
+
+        <a href="games/osi-puzzle.html" class="game-card" aria-label="OSI Puzzle — Reconstituez le modele OSI">
+          <div class="game-card__icon" aria-hidden="true">&#x1F9E9;</div>
+          <h2 class="game-card__title" data-i18n="game_osi_puzzle">OSI PUZZLE</h2>
+          <p class="game-card__desc" data-i18n="desc_osi_puzzle">Reconstituez le modele OSI</p>
+        </a>
+
+        <a href="games/protocol-quiz.html" class="game-card" aria-label="Protocol Quiz — Testez vos connaissances protocoles">
+          <div class="game-card__icon" aria-hidden="true">&#x2753;</div>
+          <h2 class="game-card__title" data-i18n="game_protocol_quiz">PROTOCOL QUIZ</h2>
+          <p class="game-card__desc" data-i18n="desc_protocol_quiz">Testez vos connaissances protocoles</p>
+        </a>
+
+        <a href="games/subnet-challenge.html" class="game-card" aria-label="Subnet Challenge — Calculez les sous-reseaux">
+          <div class="game-card__icon" aria-hidden="true">&#x1F5A7;</div>
+          <h2 class="game-card__title" data-i18n="game_subnet_challenge">SUBNET CHALLENGE</h2>
+          <p class="game-card__desc" data-i18n="desc_subnet_challenge">Calculez les sous-reseaux</p>
+        </a>
+
+        <a href="games/cable-chaos.html" class="game-card" aria-label="Cable Chaos — Cabblez le reseau correctement">
+          <div class="game-card__icon" aria-hidden="true">&#x1F50C;</div>
+          <h2 class="game-card__title" data-i18n="game_cable_chaos">CABLE CHAOS</h2>
+          <p class="game-card__desc" data-i18n="desc_cable_chaos">Cabblez le reseau correctement</p>
+        </a>
+
+      </div>
+    </section>
+
+    <hr class="divider" aria-hidden="true">
+
+    <!-- HALL OF FAME -->
+    <section class="hall-of-fame" aria-labelledby="hof-title">
+      <h2 class="hall-of-fame__title" id="hof-title" data-i18n="hall_of_fame">HALL OF FAME</h2>
+      <div id="hall-of-fame-table" role="region" aria-live="polite">
+        <!-- Populated by main.js -->
+      </div>
+    </section>
+
+    <hr class="divider" aria-hidden="true">
+
+    <!-- HALL OF PINS -->
+    <section class="hall-of-pins" aria-labelledby="hop-title">
+      <h2 class="hall-of-pins__title" id="hop-title">HALL OF PINS</h2>
+      <div id="hall-of-pins-grid" role="region" aria-live="polite">
+        <!-- Populated by rewards.js via main.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Hidden canvas for ticket generation -->
+  <canvas id="ticket-canvas" style="display:none;" aria-hidden="true"></canvas>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/scores.js"></script>
+  <script src="js/ticket.js"></script>
+  <script src="js/rewards.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Port Match — Associez les services reseau a leurs ports. Jeu educatif arcade.">
+  <title>PORT MATCH — THE ARCADE BORNE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main class="arcade-screen arcade-screen--narrow" role="main">
+
+    <!-- HEADER -->
+    <header class="site-header">
+      <a href="../index.html" class="btn-back" data-i18n="back" aria-label="Retour au menu">&#x3C; RETOUR</a>
+      <div class="site-header__controls">
+        <a href="https://thmsryn.github.io/" class="header-link" target="_blank" rel="noopener" aria-label="Portfolio de Thomas Rayon">[PORTFOLIO]</a>
+        <a href="https://github.com/ThmsRyn" class="header-link" target="_blank" rel="noopener" aria-label="GitHub de Thomas Rayon">[GITHUB]</a>
+        <a href="https://www.linkedin.com/in/thomas-rayon-6a90001b5/" class="header-link" target="_blank" rel="noopener" aria-label="LinkedIn de Thomas Rayon">[LINKEDIN]</a>
+        <button id="lang-toggle" class="btn-lang" aria-label="Changer de langue">EN</button>
+      </div>
+    </header>
+
+    <!-- DIFFICULTY SELECTION -->
+    <section id="difficulty-screen" aria-labelledby="diff-title">
+      <div class="difficulty-selector">
+        <h1 class="game-title mb-lg" data-i18n="game_port_match">PORT MATCH</h1>
+        <p class="difficulty-selector__title" data-i18n="select_difficulty">CHOISIR LA DIFFICULTE</p>
+        <div class="difficulty-buttons">
+          <button class="btn btn--easy btn--large" data-difficulty="easy">
+            <span data-i18n="easy">FACILE</span><br>
+            <small style="font-size:0.38rem; opacity:0.7;">8 PORTS</small>
+          </button>
+          <button class="btn btn--medium btn--large" data-difficulty="medium">
+            <span data-i18n="medium">MOYEN</span><br>
+            <small style="font-size:0.38rem; opacity:0.7;">12 PORTS</small>
+          </button>
+          <button class="btn btn--hard btn--large" data-difficulty="hard">
+            <span data-i18n="hard">DIFFICILE</span><br>
+            <small style="font-size:0.38rem; opacity:0.7;">16 PORTS</small>
+          </button>
+        </div>
+        <!-- How to Play -->
+        <div class="htp-box" id="htp-box" aria-label="Comment jouer">
+          <button class="htp-toggle" id="htp-toggle" aria-expanded="true" aria-controls="htp-content">
+            <span data-i18n="htp_collapse">COMMENT JOUER</span>
+            <span class="htp-toggle__arrow" id="htp-arrow" aria-hidden="true">&#x25BC;</span>
+          </button>
+          <div class="htp-content" id="htp-content">
+            <p class="htp-text" data-i18n="htp_port_match"></p>
+          </div>
+        </div>
+
+        <p class="text-grey mt-md" style="font-size:0.38rem;" data-i18n="pm_instruction">Cliquez un service, puis son port correspondant.</p>
+      </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game-screen" style="display:none;" aria-label="Partie en cours">
+
+      <div class="game-header">
+        <h1 class="game-title" data-i18n="game_port_match">PORT MATCH</h1>
+        <div class="game-hud">
+          <div class="hud-item">
+            <span class="hud-item__label" data-i18n="hud_time">TEMPS</span>
+            <span class="hud-item__value" id="hud-timer" aria-live="polite">00:00</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-item__label" data-i18n="hud_errors">ERREURS</span>
+            <span class="hud-item__value" id="hud-errors" aria-live="polite">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-area">
+        <div class="port-match-grid">
+          <div>
+            <p class="port-match-col__title" data-i18n="pm_services">SERVICES</p>
+            <div id="services-col" role="list" aria-label="Liste des services"></div>
+          </div>
+          <div>
+            <p class="port-match-col__title" data-i18n="pm_ports">PORTS</p>
+            <div id="ports-col" role="list" aria-label="Liste des ports"></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="result-screen" style="display:none;" aria-label="Resultat">
+      <div class="game-result">
+        <h2 class="game-result__title game-result__title--win" id="result-title">VICTOIRE !</h2>
+        <p class="game-result__score" id="result-score" aria-label="Score final">000000</p>
+        <div class="game-result__actions">
+          <button class="btn btn--primary btn--large" id="save-score-btn" data-i18n="save_score">ENREGISTRER LE SCORE</button>
+          <button class="btn btn--magenta btn--large" id="play-again-btn" data-i18n="play_again">REJOUER</button>
+          <a href="../index.html" class="btn btn--small text-grey" style="border-color:#333;" data-i18n="menu">MENU</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCORE ENTRY SCREEN -->
+    <section id="score-entry-screen" style="display:none;" aria-label="Entree du score">
+      <div id="score-entry-container"></div>
+    </section>
+
+    <!-- POST-SAVE SCREEN -->
+    <section id="post-save-screen" style="display:none;" aria-label="Score enregistre">
+      <div class="game-result text-center">
+        <p class="text-green mt-lg" style="font-size:0.6rem;">&#x2713; SCORE ENREGISTRE !</p>
+        <div class="game-result__actions mt-lg">
+          <button class="btn btn--magenta" id="capture-btn" data-i18n="capture_score">CAPTURE SCORE</button>
+          <button class="btn btn--primary" id="play-again-btn-2" data-i18n="play_again" onclick="document.getElementById('post-save-screen').style.display='none'; document.getElementById('difficulty-screen').style.display='block';">REJOUER</button>
+          <a href="../index.html" class="btn btn--small text-grey" style="border-color:#333;" data-i18n="menu">MENU</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <canvas id="ticket-canvas" style="display:none;" aria-hidden="true"></canvas>
+
+  <script src="../js/i18n.js"></script>
+  <script src="../js/scores.js"></script>
+  <script src="../js/ticket.js"></script>
+  <script src="../js/rewards.js"></script>
+  <script src="../js/port-match.js"></script>
+  <script src="../js/htp.js"></script>
+
+</body>
+</html>
