@@ -563,6 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scoreEntry.render(
       document.getElementById('score-entry-container'),
       (initials) => {
+        ptState.initials = initials;
         scores.saveScore(initials, ptState.gameId, ptState.difficulty, ptState.score);
         if (typeof checkRewards === 'function') checkRewards();
         ptHide('score-entry-screen');
@@ -585,15 +586,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const captureBtn = document.getElementById('capture-btn');
   if (captureBtn) captureBtn.addEventListener('click', () => {
-    if (typeof generateTicket === 'function') {
-      generateTicket({
-        game:       i18n.t('game_packet_tracer'),
-        difficulty: ptState.difficulty,
-        score:      ptState.score,
-        errors:     ptState.errors,
-        lang:       ptGetLang()
-      });
-    }
+    ticket.generate({
+      initials:   ptState.initials || 'AAA',
+      game:       i18n.t('game_packet_tracer'),
+      difficulty: ptState.difficulty,
+      score:      ptState.score,
+      topScore:   1300
+    });
   });
 
   document.addEventListener('langChange', () => {

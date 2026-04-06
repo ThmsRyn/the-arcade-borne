@@ -217,6 +217,7 @@ const vmState = {
   timerInterval: null,
   gameId:        'vlan-master',
   validated:     false,
+  initials:      null,
 };
 
 // ============================================================
@@ -541,6 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scoreEntry.render(
       document.getElementById('score-entry-container'),
       (initials) => {
+        vmState.initials = initials;
         scores.saveScore(initials, vmState.gameId, vmState.difficulty, vmState.score);
         if (typeof checkRewards === 'function') checkRewards();
         vmHide('score-entry-screen');
@@ -563,13 +565,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const captureBtn = document.getElementById('capture-btn');
   if (captureBtn) captureBtn.addEventListener('click', () => {
-    if (typeof generateTicket === 'function') {
-      generateTicket({
+    if (typeof ticket !== 'undefined' && typeof ticket.generate === 'function') {
+      ticket.generate({
+        initials:   vmState.initials || 'AAA',
         game:       i18n.t('game_vlan_master'),
         difficulty: vmState.difficulty,
         score:      vmState.score,
-        errors:     vmState.errors,
-        lang:       vmGetLang()
+        topScore:   1400
       });
     }
   });

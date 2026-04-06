@@ -501,6 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scoreEntry.render(
       document.getElementById('score-entry-container'),
       (initials) => {
+        fbState.initials = initials;
         scores.saveScore(initials, fbState.gameId, fbState.difficulty, fbState.score);
         if (typeof checkRewards === 'function') checkRewards();
         fbHide('score-entry-screen');
@@ -523,15 +524,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const captureBtn = document.getElementById('capture-btn');
   if (captureBtn) captureBtn.addEventListener('click', () => {
-    if (typeof generateTicket === 'function') {
-      generateTicket({
-        game:       i18n.t('game_firewall_blitz'),
-        difficulty: fbState.difficulty,
-        score:      fbState.score,
-        errors:     fbState.errors,
-        lang:       fbGetLang()
-      });
-    }
+    ticket.generate({
+      initials:   fbState.initials || 'AAA',
+      game:       i18n.t('game_firewall_blitz'),
+      difficulty: fbState.difficulty,
+      score:      fbState.score,
+      topScore:   1500
+    });
   });
 
   // Language change
