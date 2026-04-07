@@ -2,216 +2,128 @@
  * osi-puzzle.js — OSI Puzzle game logic
  *
  * Puzzle types:
- *   osi        — drag 7 OSI layers into correct order
- *   tcpip      — drag 4 TCP/IP layers into correct order
- *   handshake  — drag TCP handshake steps into correct order (3/7/10 steps by difficulty)
- *   dhcp       — drag 4 DHCP DORA steps into correct order
- *   encap      — drag 5 packet encapsulation layers into correct order
+ *   osi        — 7 OSI layers
+ *   tcpip      — 4 TCP/IP layers
+ *   handshake  — TCP handshake steps (3 easy / 7 medium / 10 hard)
+ *   dhcp       — 4 DHCP DORA steps
+ *   encap      — 5 packet encapsulation layers
  *
  * Difficulty behaviour:
- *   easy   — slots show number + full label, pieces show label + description
- *   medium — slots show number only, pieces show description only
- *   hard   — slots in random order, countdown timer, pieces show short label only
+ *   easy   — phase 1 only (noms des couches), chrono qui compte, pas de limite
+ *   medium — phase 1 noms → phase 2 protocoles, chrono qui compte, pas de limite
+ *            (handshake/dhcp : une seule phase, temps imparti 60s)
+ *   hard   — phase 1 noms 20s → phase 2 protocoles 30s
+ *            (handshake/dhcp : une seule phase, temps imparti 20s)
  *
- * Score: 700 base + speed bonus - error penalties
+ * Slots : toujours dans l'ordre fixe (7→1 pour OSI, 1→N pour les autres)
+ * Pièces : toujours mélangées
  */
 
 // ============================================================
 // PUZZLE DATA
 // ============================================================
 
-// OSI MODEL — 7 layers, position = correct slot number (7 = top)
 const OSI_LAYERS = [
-  { num: 7, key: 'layer_7',  examples_fr: 'HTTP, FTP, DNS',  examples_en: 'HTTP, FTP, DNS' },
-  { num: 6, key: 'layer_6',  examples_fr: 'SSL/TLS, JPEG',   examples_en: 'SSL/TLS, JPEG' },
-  { num: 5, key: 'layer_5',  examples_fr: 'NetBIOS, RPC',    examples_en: 'NetBIOS, RPC' },
-  { num: 4, key: 'layer_4',  examples_fr: 'TCP, UDP',        examples_en: 'TCP, UDP' },
-  { num: 3, key: 'layer_3',  examples_fr: 'IP, ICMP',        examples_en: 'IP, ICMP' },
-  { num: 2, key: 'layer_2',  examples_fr: 'Ethernet, MAC',   examples_en: 'Ethernet, MAC' },
-  { num: 1, key: 'layer_1',  examples_fr: 'Cable, Fibre',    examples_en: 'Cable, Fiber' }
+  { num: 7, key: 'layer_7', proto: ['HTTP', 'FTP', 'DNS'] },
+  { num: 6, key: 'layer_6', proto: ['SSL/TLS', 'JPEG'] },
+  { num: 5, key: 'layer_5', proto: ['NetBIOS', 'RPC'] },
+  { num: 4, key: 'layer_4', proto: ['TCP', 'UDP'] },
+  { num: 3, key: 'layer_3', proto: ['IP', 'ICMP'] },
+  { num: 2, key: 'layer_2', proto: ['Ethernet', 'MAC'] },
+  { num: 1, key: 'layer_1', proto: ['Cable', 'Fibre'] }
 ];
 
-// Protocol Sort data (kept for potential future use — not used in this refactor)
-const PROTOCOL_SORT_ITEMS = [
-  { name: 'HTTP',      layer: 7 },
-  { name: 'FTP',       layer: 7 },
-  { name: 'DNS',       layer: 7 },
-  { name: 'SSL/TLS',   layer: 6 },
-  { name: 'JPEG',      layer: 6 },
-  { name: 'NetBIOS',   layer: 5 },
-  { name: 'RPC',       layer: 5 },
-  { name: 'TCP',       layer: 4 },
-  { name: 'UDP',       layer: 4 },
-  { name: 'IP',        layer: 3 },
-  { name: 'ICMP',      layer: 3 },
-  { name: 'Ethernet',  layer: 2 },
-  { name: 'MAC',       layer: 2 },
-  { name: 'Cable',     layer: 1 }
-];
-
-// TCP/IP MODEL — 4 layers, slot 1 = top (Application)
 const TCPIP_LAYERS = [
-  {
-    num: 1,
-    label_fr: 'APPLICATION',
-    label_en: 'APPLICATION',
-    desc_fr: 'HTTP, FTP, DNS, SMTP',
-    desc_en: 'HTTP, FTP, DNS, SMTP'
-  },
-  {
-    num: 2,
-    label_fr: 'TRANSPORT',
-    label_en: 'TRANSPORT',
-    desc_fr: 'TCP, UDP',
-    desc_en: 'TCP, UDP'
-  },
-  {
-    num: 3,
-    label_fr: 'INTERNET',
-    label_en: 'INTERNET',
-    desc_fr: 'IP, ICMP, ARP',
-    desc_en: 'IP, ICMP, ARP'
-  },
-  {
-    num: 4,
-    label_fr: 'ACCES RESEAU',
-    label_en: 'NETWORK ACCESS',
-    desc_fr: 'Ethernet, WiFi, MAC',
-    desc_en: 'Ethernet, WiFi, MAC'
-  }
+  { num: 1, label_fr: 'APPLICATION',  label_en: 'APPLICATION',   proto: ['HTTP', 'FTP', 'DNS', 'SMTP'] },
+  { num: 2, label_fr: 'TRANSPORT',    label_en: 'TRANSPORT',     proto: ['TCP', 'UDP'] },
+  { num: 3, label_fr: 'INTERNET',     label_en: 'INTERNET',      proto: ['IP', 'ICMP', 'ARP'] },
+  { num: 4, label_fr: 'ACCES RESEAU', label_en: 'NETWORK ACCESS', proto: ['Ethernet', 'WiFi', 'MAC'] }
 ];
 
-// TCP HANDSHAKE — steps vary by difficulty
-// Each step has: num (correct position), short (hard mode label), full_fr, full_en
 const HANDSHAKE_STEPS = {
   easy: [
-    { num: 1, short: 'SYN',     full_fr: 'SYN — Client vers Serveur',       full_en: 'SYN — Client to Server' },
-    { num: 2, short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client',   full_en: 'SYN-ACK — Server to Client' },
-    { num: 3, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',       full_en: 'ACK — Client to Server' }
+    { num: 1, short: 'SYN',     full_fr: 'SYN — Client vers Serveur',      full_en: 'SYN — Client to Server' },
+    { num: 2, short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client',  full_en: 'SYN-ACK — Server to Client' },
+    { num: 3, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',      full_en: 'ACK — Client to Server' }
   ],
   medium: [
-    { num: 1, short: 'SYN',     full_fr: 'SYN — Client vers Serveur',       full_en: 'SYN — Client to Server' },
-    { num: 2, short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client',   full_en: 'SYN-ACK — Server to Client' },
-    { num: 3, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',       full_en: 'ACK — Client to Server' },
-    { num: 4, short: 'DATA',    full_fr: 'DATA — Client vers Serveur',      full_en: 'DATA — Client to Server' },
-    { num: 5, short: 'ACK',     full_fr: 'ACK — Serveur vers Client',       full_en: 'ACK — Server to Client' },
-    { num: 6, short: 'FIN',     full_fr: 'FIN — Client vers Serveur',       full_en: 'FIN — Client to Server' },
-    { num: 7, short: 'FIN-ACK', full_fr: 'FIN-ACK — Serveur vers Client',   full_en: 'FIN-ACK — Server to Client' }
+    { num: 1, short: 'SYN',     full_fr: 'SYN — Client vers Serveur',      full_en: 'SYN — Client to Server' },
+    { num: 2, short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client',  full_en: 'SYN-ACK — Server to Client' },
+    { num: 3, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',      full_en: 'ACK — Client to Server' },
+    { num: 4, short: 'DATA',    full_fr: 'DATA — Client vers Serveur',     full_en: 'DATA — Client to Server' },
+    { num: 5, short: 'ACK',     full_fr: 'ACK — Serveur vers Client',      full_en: 'ACK — Server to Client' },
+    { num: 6, short: 'FIN',     full_fr: 'FIN — Client vers Serveur',      full_en: 'FIN — Client to Server' },
+    { num: 7, short: 'FIN-ACK', full_fr: 'FIN-ACK — Serveur vers Client',  full_en: 'FIN-ACK — Server to Client' }
   ],
   hard: [
-    { num: 1,  short: 'SYN',     full_fr: 'SYN — Client vers Serveur',      full_en: 'SYN — Client to Server' },
-    { num: 2,  short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client',  full_en: 'SYN-ACK — Server to Client' },
-    { num: 3,  short: 'ACK',     full_fr: 'ACK — Client vers Serveur',      full_en: 'ACK — Client to Server' },
-    { num: 4,  short: 'DATA',    full_fr: 'DATA — Client vers Serveur',     full_en: 'DATA — Client to Server' },
-    { num: 5,  short: 'ACK',     full_fr: 'ACK — Serveur vers Client',      full_en: 'ACK — Server to Client' },
-    { num: 6,  short: 'DATA',    full_fr: 'DATA — Serveur vers Client',     full_en: 'DATA — Server to Client' },
-    { num: 7,  short: 'ACK',     full_fr: 'ACK — Client vers Serveur',      full_en: 'ACK — Client to Server' },
-    { num: 8,  short: 'FIN',     full_fr: 'FIN — Client vers Serveur',      full_en: 'FIN — Client to Server' },
-    { num: 9,  short: 'FIN-ACK', full_fr: 'FIN-ACK — Serveur vers Client',  full_en: 'FIN-ACK — Server to Client' },
-    { num: 10, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',      full_en: 'ACK — Client to Server' }
+    { num: 1,  short: 'SYN',     full_fr: 'SYN — Client vers Serveur',     full_en: 'SYN — Client to Server' },
+    { num: 2,  short: 'SYN-ACK', full_fr: 'SYN-ACK — Serveur vers Client', full_en: 'SYN-ACK — Server to Client' },
+    { num: 3,  short: 'ACK',     full_fr: 'ACK — Client vers Serveur',     full_en: 'ACK — Client to Server' },
+    { num: 4,  short: 'DATA',    full_fr: 'DATA — Client vers Serveur',    full_en: 'DATA — Client to Server' },
+    { num: 5,  short: 'ACK',     full_fr: 'ACK — Serveur vers Client',     full_en: 'ACK — Server to Client' },
+    { num: 6,  short: 'DATA',    full_fr: 'DATA — Serveur vers Client',    full_en: 'DATA — Server to Client' },
+    { num: 7,  short: 'ACK',     full_fr: 'ACK — Client vers Serveur',     full_en: 'ACK — Client to Server' },
+    { num: 8,  short: 'FIN',     full_fr: 'FIN — Client vers Serveur',     full_en: 'FIN — Client to Server' },
+    { num: 9,  short: 'FIN-ACK', full_fr: 'FIN-ACK — Serveur vers Client', full_en: 'FIN-ACK — Server to Client' },
+    { num: 10, short: 'ACK',     full_fr: 'ACK — Client vers Serveur',     full_en: 'ACK — Client to Server' }
   ]
 };
 
-// DHCP DORA — 4 steps, same order for all difficulties
-// Hard mode: pieces show only the single letter (D/O/R/A)
 const DHCP_STEPS = [
-  {
-    num: 1,
-    letter: 'D',
-    full_fr: 'DISCOVER — Client (broadcast)',
-    full_en: 'DISCOVER — Client (broadcast)'
-  },
-  {
-    num: 2,
-    letter: 'O',
-    full_fr: 'OFFER — Serveur (unicast/broadcast)',
-    full_en: 'OFFER — Server (unicast/broadcast)'
-  },
-  {
-    num: 3,
-    letter: 'R',
-    full_fr: 'REQUEST — Client (broadcast)',
-    full_en: 'REQUEST — Client (broadcast)'
-  },
-  {
-    num: 4,
-    letter: 'A',
-    full_fr: 'ACKNOWLEDGE — Serveur (unicast/broadcast)',
-    full_en: 'ACKNOWLEDGE — Server (unicast/broadcast)'
-  }
+  { num: 1, letter: 'D', full_fr: 'DISCOVER — Client (broadcast)',            full_en: 'DISCOVER — Client (broadcast)' },
+  { num: 2, letter: 'O', full_fr: 'OFFER — Serveur (unicast/broadcast)',      full_en: 'OFFER — Server (unicast/broadcast)' },
+  { num: 3, letter: 'R', full_fr: 'REQUEST — Client (broadcast)',             full_en: 'REQUEST — Client (broadcast)' },
+  { num: 4, letter: 'A', full_fr: 'ACKNOWLEDGE — Serveur (unicast/broadcast)', full_en: 'ACKNOWLEDGE — Server (unicast/broadcast)' }
 ];
 
-// PACKET ENCAPSULATION — 5 layers, slot 1 = top (data), slot 5 = bottom (bits)
 const ENCAP_LAYERS = [
-  {
-    num: 1,
-    label_fr: 'DONNEES',
-    label_en: 'DATA',
-    desc_fr: 'Payload applicatif',
-    desc_en: 'Application payload'
-  },
-  {
-    num: 2,
-    label_fr: 'EN-TETE SEGMENT',
-    label_en: 'SEGMENT HEADER',
-    desc_fr: 'TCP / UDP',
-    desc_en: 'TCP / UDP'
-  },
-  {
-    num: 3,
-    label_fr: 'EN-TETE PAQUET',
-    label_en: 'PACKET HEADER',
-    desc_fr: 'IP',
-    desc_en: 'IP'
-  },
-  {
-    num: 4,
-    label_fr: 'EN-TETE TRAME',
-    label_en: 'FRAME HEADER',
-    desc_fr: 'Ethernet',
-    desc_en: 'Ethernet'
-  },
-  {
-    num: 5,
-    label_fr: 'BITS PHYSIQUES',
-    label_en: 'PHYSICAL BITS',
-    desc_fr: 'Signal electrique / optique',
-    desc_en: 'Electrical / optical signal'
-  }
+  { num: 1, label_fr: 'DONNEES',        label_en: 'DATA',            proto: ['Payload'] },
+  { num: 2, label_fr: 'EN-TETE SEGMENT', label_en: 'SEGMENT HEADER', proto: ['TCP', 'UDP'] },
+  { num: 3, label_fr: 'EN-TETE PAQUET', label_en: 'PACKET HEADER',  proto: ['IP'] },
+  { num: 4, label_fr: 'EN-TETE TRAME',  label_en: 'FRAME HEADER',   proto: ['Ethernet'] },
+  { num: 5, label_fr: 'BITS PHYSIQUES', label_en: 'PHYSICAL BITS',  proto: ['Signal'] }
 ];
+
+// Types that have no protocol phase — use single-phase timed mode for medium/hard
+const NO_PROTO_TYPES = ['handshake', 'dhcp'];
 
 // ============================================================
 // GAME STATE
 // ============================================================
 
 let osiState = {
-  puzzleType: null,      // 'osi' | 'tcpip' | 'handshake' | 'dhcp' | 'encap'
-  difficulty: null,      // 'easy' | 'medium' | 'hard'
-  items: [],             // ordered dataset for the current puzzle type + difficulty
-  slotOrder: [],         // slot numbers in display order (shuffled in hard mode)
-  placedSlots: {},       // { slotNum: itemNum } — what is placed in each slot
-  errors: 0,
-  startTime: null,
+  puzzleType:   null,
+  difficulty:   null,
+  phase:        1,      // 1 = noms des couches, 2 = protocoles
+  items:        [],
+  slotOrder:    [],
+  placedSlots:  {},
+  errors:       0,
+  phase1Score:  0,
+  startTime:    null,
   timerInterval: null,
-  timerLimit: null,
-  finished: false,
-  selectedPiece: null    // for mobile tap: item num currently selected
+  timerLimit:   null,
+  finished:     false,
+  selectedPiece: null
 };
+
+// ============================================================
+// HELPERS — types with no protocol phase
+// ============================================================
+
+function hasProtoPhase(type) {
+  return !NO_PROTO_TYPES.includes(type);
+}
 
 // ============================================================
 // INIT
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Puzzle type selection buttons
   document.querySelectorAll('[data-puzzle-type]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      selectPuzzleType(btn.dataset.puzzleType);
-    });
+    btn.addEventListener('click', () => selectPuzzleType(btn.dataset.puzzleType));
   });
 
-  // Back to type selection
   const backBtn = document.getElementById('back-to-type-btn');
   if (backBtn) {
     backBtn.addEventListener('click', () => {
@@ -220,12 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // How to Play toggle
   const htpToggle = document.getElementById('htp-toggle');
   if (htpToggle) {
     htpToggle.addEventListener('click', () => {
       const content = document.getElementById('htp-content');
-      const arrow = document.getElementById('htp-arrow');
+      const arrow   = document.getElementById('htp-arrow');
       const expanded = htpToggle.getAttribute('aria-expanded') === 'true';
       htpToggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
       content.style.display = expanded ? 'none' : 'block';
@@ -233,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Post-save play again button — returns to type selection
   const postSavePlayAgain = document.getElementById('post-save-play-again-btn');
   if (postSavePlayAgain) {
     postSavePlayAgain.addEventListener('click', () => {
@@ -242,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Language change — re-render pieces if a game is in progress
   document.addEventListener('langChange', () => {
     if (osiState.difficulty && !osiState.finished) {
       renderSlots();
@@ -258,26 +167,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function selectPuzzleType(type) {
   osiState.puzzleType = type;
 
-  // Update the How to Play text based on selected type
   const htpTextEl = document.getElementById('htp-text');
-  if (htpTextEl) {
-    const key = 'htp_' + type;
-    htpTextEl.textContent = i18n.t(key);
-  }
+  if (htpTextEl) htpTextEl.textContent = i18n.t('htp_' + type);
 
-  // Inject difficulty buttons depending on puzzle type
   buildDifficultyButtons(type);
 
   document.getElementById('type-screen').style.display = 'none';
   document.getElementById('difficulty-screen').style.display = 'block';
 
-  // Ensure How to Play is expanded when arriving on difficulty screen
   const htpContent = document.getElementById('htp-content');
-  const htpToggle = document.getElementById('htp-toggle');
-  const htpArrow = document.getElementById('htp-arrow');
+  const htpToggle  = document.getElementById('htp-toggle');
+  const htpArrow   = document.getElementById('htp-arrow');
   if (htpContent) htpContent.style.display = 'block';
-  if (htpToggle) htpToggle.setAttribute('aria-expanded', 'true');
-  if (htpArrow) htpArrow.innerHTML = '&#x25BC;';
+  if (htpToggle)  htpToggle.setAttribute('aria-expanded', 'true');
+  if (htpArrow)   htpArrow.innerHTML = '&#x25BC;';
 }
 
 function buildDifficultyButtons(type) {
@@ -285,9 +188,7 @@ function buildDifficultyButtons(type) {
   if (!container) return;
   container.innerHTML = '';
 
-  // Handshake has different subtitles per difficulty
   const subtitles = getDifficultySubtitles(type);
-
   const diffs = [
     { key: 'easy',   cls: 'btn--easy',   i18n: 'easy' },
     { key: 'medium', cls: 'btn--medium', i18n: 'medium' },
@@ -307,34 +208,35 @@ function buildDifficultyButtons(type) {
 
 function getDifficultySubtitles(type) {
   const lang = i18n.getLang();
-  const subtitles = {
-    osi: {
-      easy:   lang === 'fr' ? '7 > 1 + INDICES'      : '7 > 1 + HINTS',
-      medium: lang === 'fr' ? '7 > 1 SANS INDICES'   : '7 > 1 NO HINTS',
-      hard:   lang === 'fr' ? '7 > 1 TIMER 45s'      : '7 > 1 TIMER 45s'
-    },
-    tcpip: {
-      easy:   lang === 'fr' ? '1 > 4 + INDICES'      : '1 > 4 + HINTS',
-      medium: lang === 'fr' ? '1 > 4 SANS INDICES'   : '1 > 4 NO HINTS',
-      hard:   lang === 'fr' ? '1 > 4 TIMER 45s'      : '1 > 4 TIMER 45s'
-    },
-    handshake: {
-      easy:   '3 STEPS',
-      medium: '7 STEPS',
-      hard:   '10 STEPS + TIMER 45s'
-    },
-    dhcp: {
-      easy:   lang === 'fr' ? 'NOM + DETAILS'        : 'NAME + DETAILS',
-      medium: lang === 'fr' ? 'NOM SEULEMENT'        : 'NAME ONLY',
-      hard:   lang === 'fr' ? 'LETTRE + TIMER 45s'   : 'LETTER + TIMER 45s'
-    },
-    encap: {
-      easy:   lang === 'fr' ? '5 ELEMENTS + DESC'    : '5 ELEMENTS + DESC',
-      medium: lang === 'fr' ? 'NOMS TECHNIQUES'      : 'TECHNICAL NAMES',
-      hard:   lang === 'fr' ? 'COURT + TIMER 30s'    : 'SHORT + TIMER 30s'
-    }
+  const fr = lang === 'fr';
+  const noProto = !hasProtoPhase(type);
+
+  if (type === 'osi') return {
+    easy:   fr ? 'NOMS + CHRONO'                     : 'NAMES + STOPWATCH',
+    medium: fr ? 'NOMS → PROTOCOLES + CHRONO'        : 'NAMES → PROTOCOLS + STOPWATCH',
+    hard:   fr ? 'NOMS 20s → PROTOCOLES 30s'         : 'NAMES 20s → PROTOCOLS 30s'
   };
-  return subtitles[type] || { easy: 'EASY', medium: 'MEDIUM', hard: 'HARD' };
+  if (type === 'tcpip') return {
+    easy:   fr ? 'NOMS + CHRONO'                     : 'NAMES + STOPWATCH',
+    medium: fr ? 'NOMS → PROTOCOLES + CHRONO'        : 'NAMES → PROTOCOLS + STOPWATCH',
+    hard:   fr ? 'NOMS 20s → PROTOCOLES 30s'         : 'NAMES 20s → PROTOCOLS 30s'
+  };
+  if (type === 'handshake') return {
+    easy:   '3 ETAPES + CHRONO',
+    medium: fr ? '7 ETAPES + 60s'                    : '7 STEPS + 60s',
+    hard:   fr ? '10 ETAPES + 20s'                   : '10 STEPS + 20s'
+  };
+  if (type === 'dhcp') return {
+    easy:   fr ? 'NOMS + CHRONO'                     : 'NAMES + STOPWATCH',
+    medium: fr ? 'NOMS + 60s'                        : 'NAMES + 60s',
+    hard:   fr ? 'NOMS + 20s'                        : 'NAMES + 20s'
+  };
+  if (type === 'encap') return {
+    easy:   fr ? 'NOMS + CHRONO'                     : 'NAMES + STOPWATCH',
+    medium: fr ? 'NOMS → PROTOCOLES + CHRONO'        : 'NAMES → PROTOCOLS + STOPWATCH',
+    hard:   fr ? 'NOMS 20s → PROTOCOLES 30s'         : 'NAMES 20s → PROTOCOLS 30s'
+  };
+  return { easy: 'EASY', medium: 'MEDIUM', hard: 'HARD' };
 }
 
 // ============================================================
@@ -342,42 +244,42 @@ function getDifficultySubtitles(type) {
 // ============================================================
 
 function startGame(difficulty) {
-  const type = osiState.puzzleType;
-  const items = buildItemsForType(type, difficulty);
-  const total = items.length;
+  const type  = osiState.puzzleType;
+  const items = buildItemsForType(type, difficulty, 1);
 
-  let slotOrder;
-  let timerLimit = null;
-
-  // Slot order never changes — always 7→1 for OSI, 1→N for all other types.
-  // Difficulty affects only the amount of info shown on pieces/slots and the timer.
-  slotOrder = type === 'osi'
+  const slotOrder = type === 'osi'
     ? [7, 6, 5, 4, 3, 2, 1]
     : items.map(item => item.num);
 
-  if (difficulty === 'hard') {
-    timerLimit = type === 'encap' ? 30 : 45;
-  }
+  // Timer logic:
+  // easy        → no limit (stopwatch)
+  // medium      → no limit unless no-proto type (60s)
+  // hard        → 20s phase 1 (or 20s single phase for no-proto)
+  let timerLimit = null;
+  if (difficulty === 'medium' && !hasProtoPhase(type)) timerLimit = 60;
+  if (difficulty === 'hard')                            timerLimit = 20;
 
   osiState = {
-    puzzleType: type,
+    puzzleType:    type,
     difficulty,
+    phase:         1,
     items,
     slotOrder,
-    placedSlots: {},
-    errors: 0,
-    startTime: Date.now(),
+    placedSlots:   {},
+    errors:        0,
+    phase1Score:   0,
+    startTime:     Date.now(),
     timerInterval: null,
     timerLimit,
-    finished: false,
+    finished:      false,
     selectedPiece: null
   };
 
-  // Update slot column title
   const slotsTitle = document.getElementById('osi-slots-title');
-  if (slotsTitle) {
-    slotsTitle.textContent = getSlotColumnTitle(type);
-  }
+  if (slotsTitle) slotsTitle.textContent = getSlotColumnTitle(type);
+
+  const phaseEl = document.getElementById('osi-phase-label');
+  if (phaseEl) phaseEl.textContent = getPhaseLabel(1);
 
   document.getElementById('difficulty-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'block';
@@ -399,52 +301,78 @@ function getSlotColumnTitle(type) {
   return titles[type] || 'MODEL';
 }
 
-// Build the ordered item list for the selected type and difficulty
-function buildItemsForType(type, difficulty) {
+function getPhaseLabel(phase) {
+  const lang = i18n.getLang();
+  if (phase === 1) return lang === 'fr' ? 'PHASE 1 — NOMS' : 'PHASE 1 — NAMES';
+  return lang === 'fr' ? 'PHASE 2 — PROTOCOLES' : 'PHASE 2 — PROTOCOLS';
+}
+
+// ============================================================
+// BUILD ITEMS
+// ============================================================
+
+// phase 1 = noms des couches/etapes, phase 2 = protocoles representatifs
+function buildItemsForType(type, difficulty, phase) {
   if (type === 'osi') {
-    // OSI: slot 7 = top (Application), slot 1 = bottom (Physical)
+    if (phase === 1) {
+      return OSI_LAYERS.map(l => ({
+        num:   l.num,
+        label: () => i18n.t(l.key),
+        piece: () => i18n.t(l.key)
+      }));
+    }
+    // Phase 2 : un protocole représentatif par couche
     return OSI_LAYERS.map(l => ({
-      num: l.num,
+      num:   l.num,
       label: () => i18n.t(l.key),
-      desc: () => (i18n.getLang() === 'fr' ? l.examples_fr : l.examples_en),
-      short: () => i18n.t(l.key)
+      piece: () => l.proto[0]
     }));
   }
 
   if (type === 'tcpip') {
+    if (phase === 1) {
+      return TCPIP_LAYERS.map(l => ({
+        num:   l.num,
+        label: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en,
+        piece: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en
+      }));
+    }
     return TCPIP_LAYERS.map(l => ({
-      num: l.num,
-      label: () => (i18n.getLang() === 'fr' ? l.label_fr : l.label_en),
-      desc: () => (i18n.getLang() === 'fr' ? l.desc_fr : l.desc_en),
-      short: () => (i18n.getLang() === 'fr' ? l.label_fr : l.label_en)
+      num:   l.num,
+      label: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en,
+      piece: () => l.proto[0]
     }));
   }
 
   if (type === 'handshake') {
     const steps = HANDSHAKE_STEPS[difficulty] || HANDSHAKE_STEPS.easy;
     return steps.map(s => ({
-      num: s.num,
-      label: () => (i18n.getLang() === 'fr' ? s.full_fr : s.full_en),
-      desc: () => '',
-      short: () => s.short
+      num:   s.num,
+      label: () => i18n.getLang() === 'fr' ? s.full_fr : s.full_en,
+      piece: () => s.short
     }));
   }
 
   if (type === 'dhcp') {
     return DHCP_STEPS.map(s => ({
-      num: s.num,
-      label: () => (i18n.getLang() === 'fr' ? s.full_fr : s.full_en),
-      desc: () => '',
-      short: () => s.letter
+      num:   s.num,
+      label: () => i18n.getLang() === 'fr' ? s.full_fr : s.full_en,
+      piece: () => s.letter
     }));
   }
 
   if (type === 'encap') {
+    if (phase === 1) {
+      return ENCAP_LAYERS.map(l => ({
+        num:   l.num,
+        label: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en,
+        piece: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en
+      }));
+    }
     return ENCAP_LAYERS.map(l => ({
-      num: l.num,
-      label: () => (i18n.getLang() === 'fr' ? l.label_fr : l.label_en),
-      desc: () => (i18n.getLang() === 'fr' ? l.desc_fr : l.desc_en),
-      short: () => (i18n.getLang() === 'fr' ? l.label_fr : l.label_en)
+      num:   l.num,
+      label: () => i18n.getLang() === 'fr' ? l.label_fr : l.label_en,
+      piece: () => l.proto[0]
     }));
   }
 
@@ -460,49 +388,26 @@ function renderSlots() {
   container.innerHTML = '';
 
   osiState.slotOrder.forEach(num => {
-    const item = osiState.items.find(i => i.num === num);
     const slot = document.createElement('div');
     slot.className = 'osi-slot';
     slot.dataset.slotNum = num;
     slot.setAttribute('aria-label', `Slot ${num}`);
     slot.setAttribute('aria-dropeffect', 'move');
 
-    // EASY  : slot shows number + layer name → pieces show protocol examples only
-    //         Player must match protocols to layer names
-    // MEDIUM: slot shows number only → pieces show layer name only
-    //         Player must recall what each number corresponds to
-    // HARD  : slot shows "???" in random order → pieces show short label only
-    //         Player has zero positional hint
-    let slotContent;
-    if (osiState.difficulty === 'easy') {
-      slotContent = `
-        <span class="osi-slot__num">${num}</span>
-        <span class="osi-slot__hint">${item.label()}</span>
-      `;
-    } else if (osiState.difficulty === 'medium') {
-      slotContent = `<span class="osi-slot__num">${num}</span>`;
-    } else {
-      // Hard: same as medium — slot shows number only, no label.
-      // Difficulty comes from the timer, not from hidden slots.
-      slotContent = `<span class="osi-slot__num">${num}</span>`;
-    }
-
-    slot.innerHTML = slotContent;
+    // Slots : toujours numéro seul — la difficulté est dans les pièces et le timer
+    slot.innerHTML = `<span class="osi-slot__num">${num}</span>`;
 
     slot.addEventListener('dragover', e => {
       e.preventDefault();
       slot.classList.add('drag-over');
     });
-    slot.addEventListener('dragleave', () => {
-      slot.classList.remove('drag-over');
-    });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
     slot.addEventListener('drop', e => {
       e.preventDefault();
       slot.classList.remove('drag-over');
       const itemNum = parseInt(e.dataTransfer.getData('text/plain'), 10);
       handlePlace(num, itemNum, slot);
     });
-
     slot.addEventListener('click', () => {
       if (osiState.selectedPiece !== null && !osiState.placedSlots[num]) {
         handlePlace(num, osiState.selectedPiece, slot);
@@ -514,12 +419,10 @@ function renderSlots() {
     container.appendChild(slot);
   });
 
-  // Restore already placed items on re-render
+  // Restaurer les pièces déjà placées si re-render
   Object.entries(osiState.placedSlots).forEach(([slotNum, itemNum]) => {
     const slotEl = container.querySelector(`[data-slot-num="${slotNum}"]`);
-    if (slotEl) {
-      markSlotFilled(slotEl, parseInt(slotNum, 10), itemNum);
-    }
+    if (slotEl) markSlotFilled(slotEl, parseInt(slotNum, 10), itemNum);
   });
 }
 
@@ -534,9 +437,7 @@ function renderPieces() {
   const shuffled = shuffleArray([...osiState.items]);
 
   shuffled.forEach(item => {
-    // Skip already placed items
-    const alreadyPlaced = Object.values(osiState.placedSlots).includes(item.num);
-    if (alreadyPlaced) return;
+    if (Object.values(osiState.placedSlots).includes(item.num)) return;
 
     const piece = document.createElement('div');
     piece.className = 'osi-piece osi-piece--tappable';
@@ -544,33 +445,11 @@ function renderPieces() {
     piece.setAttribute('draggable', 'true');
     piece.setAttribute('role', 'button');
     piece.setAttribute('tabindex', '0');
-    piece.setAttribute('aria-label', item.label());
     piece.setAttribute('aria-grabbed', 'false');
 
-    // Piece content per difficulty — never shows the slot number
-    //
-    // EASY  : protocol examples only (no layer name)
-    //         Slot shows the layer name → player matches protocols to layer
-    //         e.g. piece shows "HTTP, FTP, DNS" → must go into slot "APPLICATION"
-    //
-    // MEDIUM: layer name only (no examples, no number)
-    //         Slot shows number only → player must know that name = which number
-    //         e.g. piece shows "APPLICATION" → must go into slot "7"
-    //
-    // HARD  : short label only, slots are "???" in random order
-    //         Player must know the full order from memory
-    if (osiState.difficulty === 'easy') {
-      const desc = item.desc();
-      // If no description available (handshake steps, dhcp letters), fall back to label
-      piece.innerHTML = desc
-        ? `<span style="font-size:0.32rem; color:#ccc;">${desc}</span>`
-        : `<strong>${item.label()}</strong>`;
-    } else if (osiState.difficulty === 'medium') {
-      piece.innerHTML = `<strong>${item.label()}</strong>`;
-    } else {
-      // Hard: short label only
-      piece.textContent = item.short();
-    }
+    // Phase 1 : nom de la couche / étape
+    // Phase 2 : protocole représentatif
+    piece.innerHTML = `<strong>${item.piece()}</strong>`;
 
     piece.addEventListener('dragstart', e => {
       e.dataTransfer.setData('text/plain', item.num);
@@ -582,7 +461,6 @@ function renderPieces() {
       piece.classList.remove('dragging');
       piece.setAttribute('aria-grabbed', 'false');
     });
-
     piece.addEventListener('click', () => {
       if (osiState.selectedPiece === item.num) {
         osiState.selectedPiece = null;
@@ -593,12 +471,8 @@ function renderPieces() {
         piece.classList.add('osi-piece--selected');
       }
     });
-
     piece.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        piece.click();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); piece.click(); }
     });
 
     container.appendChild(piece);
@@ -606,9 +480,7 @@ function renderPieces() {
 }
 
 function clearPieceSelection() {
-  document.querySelectorAll('.osi-piece--selected').forEach(el => {
-    el.classList.remove('osi-piece--selected');
-  });
+  document.querySelectorAll('.osi-piece--selected').forEach(el => el.classList.remove('osi-piece--selected'));
 }
 
 function markSlotFilled(slotEl, slotNum, itemNum) {
@@ -642,7 +514,7 @@ function handlePlace(slotNum, itemNum, slotEl) {
     }
 
     if (Object.keys(osiState.placedSlots).length === osiState.items.length) {
-      endGame(true);
+      phaseComplete();
     }
   } else {
     osiState.errors++;
@@ -655,10 +527,7 @@ function handlePlace(slotNum, itemNum, slotEl) {
     if (pieceEl) {
       pieceEl.style.borderColor = 'var(--red)';
       pieceEl.style.color = 'var(--red)';
-      setTimeout(() => {
-        pieceEl.style.borderColor = '';
-        pieceEl.style.color = '';
-      }, 500);
+      setTimeout(() => { pieceEl.style.borderColor = ''; pieceEl.style.color = ''; }, 500);
     }
   }
 }
@@ -669,11 +538,60 @@ function updateHUDErrors() {
 }
 
 // ============================================================
+// PHASE COMPLETE
+// ============================================================
+
+function phaseComplete() {
+  const type       = osiState.puzzleType;
+  const difficulty = osiState.difficulty;
+  const elapsed    = Math.floor((Date.now() - osiState.startTime) / 1000);
+
+  // Types sans phase 2, ou facile (une seule phase) → fin de partie
+  const goToPhase2 = osiState.phase === 1
+    && hasProtoPhase(type)
+    && (difficulty === 'medium' || difficulty === 'hard');
+
+  if (!goToPhase2) {
+    endGame(true);
+    return;
+  }
+
+  // Sauvegarder le score partiel de la phase 1
+  const speedBonus1   = Math.max(0, 200 - elapsed * 3);
+  const errorPenalty1 = osiState.errors * 20;
+  osiState.phase1Score = Math.max(0, 350 + speedBonus1 - errorPenalty1);
+
+  stopTimer();
+
+  // Transition vers phase 2
+  osiState.phase        = 2;
+  osiState.placedSlots  = {};
+  osiState.errors       = 0;
+  osiState.startTime    = Date.now();
+  osiState.timerLimit   = difficulty === 'hard' ? 30 : null;
+  osiState.items        = buildItemsForType(type, difficulty, 2);
+
+  const phaseEl = document.getElementById('osi-phase-label');
+  if (phaseEl) phaseEl.textContent = getPhaseLabel(2);
+
+  // Flash rapide pour signaler la transition
+  const gameScreen = document.getElementById('game-screen');
+  gameScreen.style.opacity = '0.3';
+  setTimeout(() => {
+    gameScreen.style.opacity = '1';
+    renderSlots();
+    renderPieces();
+    startTimer();
+  }, 400);
+}
+
+// ============================================================
 // TIMER
 // ============================================================
 
 function startTimer() {
   const timerEl = document.getElementById('hud-timer');
+  osiState.startTime = Date.now();
 
   osiState.timerInterval = setInterval(() => {
     if (!osiState.startTime) return;
@@ -681,10 +599,8 @@ function startTimer() {
 
     if (osiState.timerLimit) {
       const remaining = osiState.timerLimit - elapsed;
-      if (timerEl) timerEl.textContent = remaining > 0 ? remaining + 's' : '00';
-      if (remaining <= 0) {
-        endGame(false);
-      }
+      if (timerEl) timerEl.textContent = remaining > 0 ? remaining + 's' : '0s';
+      if (remaining <= 0) endGame(false);
     } else {
       if (timerEl) timerEl.textContent = formatTime(elapsed);
     }
@@ -693,6 +609,7 @@ function startTimer() {
 
 function stopTimer() {
   clearInterval(osiState.timerInterval);
+  osiState.timerInterval = null;
 }
 
 function formatTime(seconds) {
@@ -709,20 +626,19 @@ function endGame(win) {
   osiState.finished = true;
   stopTimer();
 
-  const total = osiState.items.length;
-  const placed = Object.keys(osiState.placedSlots).length;
-  const elapsed = Math.floor((Date.now() - osiState.startTime) / 1000);
-  const speedBonus = Math.max(0, 300 - elapsed * 5);
-  const errorPenalty = osiState.errors * 30;
-  const baseScore = win ? 700 : Math.floor((placed / total) * 700);
-  const finalScore = Math.max(0, baseScore + speedBonus - errorPenalty);
+  const total       = osiState.items.length;
+  const placed      = Object.keys(osiState.placedSlots).length;
+  const elapsed     = Math.floor((Date.now() - osiState.startTime) / 1000);
+  const speedBonus  = Math.max(0, 200 - elapsed * 3);
+  const errorPenalty = osiState.errors * 20;
+  const baseScore   = win ? 350 : Math.floor((placed / total) * 350);
+  const phase2Score = Math.max(0, baseScore + speedBonus - errorPenalty);
+  const finalScore  = osiState.phase1Score + phase2Score;
 
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'block';
 
-  document.getElementById('result-title').textContent = win
-    ? i18n.t('victory')
-    : i18n.t('game_over');
+  document.getElementById('result-title').textContent = win ? i18n.t('victory') : i18n.t('game_over');
   document.getElementById('result-title').className = win
     ? 'game-result__title game-result__title--win'
     : 'game-result__title game-result__title--lose';
@@ -745,10 +661,10 @@ function endGame(win) {
         document.getElementById('capture-btn').onclick = () => {
           ticket.generate({
             initials,
-            game: i18n.t('game_osi_puzzle'),
+            game:       i18n.t('game_osi_puzzle'),
             difficulty: osiState.difficulty,
-            score: finalScore,
-            topScore: 1000
+            score:      finalScore,
+            topScore:   1000
           });
         };
       }
