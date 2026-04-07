@@ -534,6 +534,18 @@ const REWARDS = {
     get svg()    { return buildSVG('octopus', 'bronze'); }
   },
 
+  silver_octopus: {
+    id:          'silver_octopus',
+    name:        'Poulpe d\'Argent',
+    name_en:     'Silver Octopus',
+    description: 'Port Match — score >= 700 en MEDIUM',
+    desc_en:     'Port Match — score >= 700 on MEDIUM',
+    animal:      'octopus',
+    tier:        'silver',
+    game:        'port-match',
+    get svg()    { return buildSVG('octopus', 'silver'); }
+  },
+
   gold_octopus: {
     id:          'gold_octopus',
     name:        'Poulpe d\'Or',
@@ -570,6 +582,18 @@ const REWARDS = {
     tier:        'bronze',
     game:        'osi-puzzle',
     get svg()    { return buildSVG('fox', 'bronze'); }
+  },
+
+  silver_fox: {
+    id:          'silver_fox',
+    name:        'Renard d\'Argent',
+    name_en:     'Silver Fox',
+    description: 'OSI Puzzle — score >= 700 en MEDIUM',
+    desc_en:     'OSI Puzzle — score >= 700 on MEDIUM',
+    animal:      'fox',
+    tier:        'silver',
+    game:        'osi-puzzle',
+    get svg()    { return buildSVG('fox', 'silver'); }
   },
 
   gold_fox: {
@@ -610,6 +634,18 @@ const REWARDS = {
     get svg()    { return buildSVG('owl', 'bronze'); }
   },
 
+  silver_owl: {
+    id:          'silver_owl',
+    name:        'Hibou d\'Argent',
+    name_en:     'Silver Owl',
+    description: 'Protocol Quiz — score >= 700 en MEDIUM',
+    desc_en:     'Protocol Quiz — score >= 700 on MEDIUM',
+    animal:      'owl',
+    tier:        'silver',
+    game:        'protocol-quiz',
+    get svg()    { return buildSVG('owl', 'silver'); }
+  },
+
   gold_owl: {
     id:          'gold_owl',
     name:        'Hibou d\'Or',
@@ -646,6 +682,18 @@ const REWARDS = {
     tier:        'bronze',
     game:        'subnet-challenge',
     get svg()    { return buildSVG('turtle', 'bronze'); }
+  },
+
+  silver_turtle: {
+    id:          'silver_turtle',
+    name:        'Tortue d\'Argent',
+    name_en:     'Silver Turtle',
+    description: 'Subnet Challenge — score >= 700 en MEDIUM',
+    desc_en:     'Subnet Challenge — score >= 700 on MEDIUM',
+    animal:      'turtle',
+    tier:        'silver',
+    game:        'subnet-challenge',
+    get svg()    { return buildSVG('turtle', 'silver'); }
   },
 
   gold_turtle: {
@@ -686,6 +734,18 @@ const REWARDS = {
     get svg()    { return buildSVG('dragon', 'bronze'); }
   },
 
+  silver_dragon: {
+    id:          'silver_dragon',
+    name:        'Dragon d\'Argent',
+    name_en:     'Silver Dragon',
+    description: 'Firewall Blitz — score >= 700 en MEDIUM',
+    desc_en:     'Firewall Blitz — score >= 700 on MEDIUM',
+    animal:      'dragon',
+    tier:        'silver',
+    game:        'firewall-blitz',
+    get svg()    { return buildSVG('dragon', 'silver'); }
+  },
+
   gold_dragon: {
     id:          'gold_dragon',
     name:        'Dragon d\'Or',
@@ -722,6 +782,18 @@ const REWARDS = {
     tier:        'bronze',
     game:        'dns-chain',
     get svg()    { return buildSVG('crow', 'bronze'); }
+  },
+
+  silver_crow: {
+    id:          'silver_crow',
+    name:        'Corbeau d\'Argent',
+    name_en:     'Silver Crow',
+    description: 'DNS Chain — score >= 700 en MEDIUM',
+    desc_en:     'DNS Chain — score >= 700 on MEDIUM',
+    animal:      'crow',
+    tier:        'silver',
+    game:        'dns-chain',
+    get svg()    { return buildSVG('crow', 'silver'); }
   },
 
   gold_crow: {
@@ -762,6 +834,18 @@ const REWARDS = {
     get svg()    { return buildSVG('wolf', 'bronze'); }
   },
 
+  silver_wolf: {
+    id:          'silver_wolf',
+    name:        'Loup d\'Argent',
+    name_en:     'Silver Wolf',
+    description: 'Packet Tracer — score >= 700 en MEDIUM',
+    desc_en:     'Packet Tracer — score >= 700 on MEDIUM',
+    animal:      'wolf',
+    tier:        'silver',
+    game:        'packet-tracer',
+    get svg()    { return buildSVG('wolf', 'silver'); }
+  },
+
   gold_wolf: {
     id:          'gold_wolf',
     name:        'Loup d\'Or',
@@ -800,6 +884,18 @@ const REWARDS = {
     get svg()    { return buildSVG('deer', 'bronze'); }
   },
 
+  silver_deer: {
+    id:          'silver_deer',
+    name:        'Cerf d\'Argent',
+    name_en:     'Silver Deer',
+    description: 'VLAN Master — score >= 700 en MEDIUM',
+    desc_en:     'VLAN Master — score >= 700 on MEDIUM',
+    animal:      'deer',
+    tier:        'silver',
+    game:        'vlan-master',
+    get svg()    { return buildSVG('deer', 'silver'); }
+  },
+
   gold_deer: {
     id:          'gold_deer',
     name:        'Cerf d\'Or',
@@ -836,6 +932,18 @@ const REWARDS = {
     tier:        'bronze',
     game:        'cable-chaos',
     get svg()    { return buildSVG('snake', 'bronze'); }
+  },
+
+  silver_snake: {
+    id:          'silver_snake',
+    name:        'Serpent d\'Argent',
+    name_en:     'Silver Snake',
+    description: 'Cable Chaos — score >= 700 en MEDIUM',
+    desc_en:     'Cable Chaos — score >= 700 on MEDIUM',
+    animal:      'snake',
+    tier:        'silver',
+    game:        'cable-chaos',
+    get svg()    { return buildSVG('snake', 'silver'); }
   },
 
   gold_snake: {
@@ -888,46 +996,55 @@ const REWARD_CONDITIONS = {
   // Port Match
   iron_octopus(all)   { return all.some(e => e.game === 'port-match'); },
   bronze_octopus(all) { return all.some(e => e.game === 'port-match' && e.score >= 500); },
+  silver_octopus(all) { return all.some(e => e.game === 'port-match' && e.difficulty === 'medium' && e.score >= 700); },
   gold_octopus(all)   { return all.some(e => e.game === 'port-match' && e.difficulty === 'hard' && e.score >= 800); },
 
   // OSI Puzzle
   iron_fox(all)   { return all.some(e => e.game === 'osi-puzzle'); },
   bronze_fox(all) { return all.some(e => e.game === 'osi-puzzle' && e.score >= 500); },
+  silver_fox(all) { return all.some(e => e.game === 'osi-puzzle' && e.difficulty === 'medium' && e.score >= 700); },
   gold_fox(all)   { return all.some(e => e.game === 'osi-puzzle' && e.difficulty === 'hard' && e.score >= 800); },
 
   // Protocol Quiz
   iron_owl(all)   { return all.some(e => e.game === 'protocol-quiz'); },
   bronze_owl(all) { return all.some(e => e.game === 'protocol-quiz' && e.score >= 500); },
+  silver_owl(all) { return all.some(e => e.game === 'protocol-quiz' && e.difficulty === 'medium' && e.score >= 700); },
   gold_owl(all)   { return all.some(e => e.game === 'protocol-quiz' && e.difficulty === 'hard' && e.score >= 800); },
 
   // Subnet Challenge
   iron_turtle(all)   { return all.some(e => e.game === 'subnet-challenge'); },
   bronze_turtle(all) { return all.some(e => e.game === 'subnet-challenge' && e.score >= 500); },
+  silver_turtle(all) { return all.some(e => e.game === 'subnet-challenge' && e.difficulty === 'medium' && e.score >= 700); },
   gold_turtle(all)   { return all.some(e => e.game === 'subnet-challenge' && e.difficulty === 'hard' && e.score >= 800); },
 
   // Cable Chaos
   iron_snake(all)   { return all.some(e => e.game === 'cable-chaos'); },
   bronze_snake(all) { return all.some(e => e.game === 'cable-chaos' && e.score >= 500); },
+  silver_snake(all) { return all.some(e => e.game === 'cable-chaos' && e.difficulty === 'medium' && e.score >= 700); },
   gold_snake(all)   { return all.some(e => e.game === 'cable-chaos' && e.difficulty === 'hard' && e.score >= 800); },
 
   // Firewall Blitz
   iron_dragon(all)   { return all.some(e => e.game === 'firewall-blitz'); },
   bronze_dragon(all) { return all.some(e => e.game === 'firewall-blitz' && e.score >= 500); },
+  silver_dragon(all) { return all.some(e => e.game === 'firewall-blitz' && e.difficulty === 'medium' && e.score >= 700); },
   gold_dragon(all)   { return all.some(e => e.game === 'firewall-blitz' && e.difficulty === 'hard' && e.score >= 800); },
 
   // DNS Chain
   iron_crow(all)   { return all.some(e => e.game === 'dns-chain'); },
   bronze_crow(all) { return all.some(e => e.game === 'dns-chain' && e.score >= 500); },
+  silver_crow(all) { return all.some(e => e.game === 'dns-chain' && e.difficulty === 'medium' && e.score >= 700); },
   gold_crow(all)   { return all.some(e => e.game === 'dns-chain' && e.difficulty === 'hard' && e.score >= 800); },
 
   // Packet Tracer
   iron_wolf(all)   { return all.some(e => e.game === 'packet-tracer'); },
   bronze_wolf(all) { return all.some(e => e.game === 'packet-tracer' && e.score >= 500); },
+  silver_wolf(all) { return all.some(e => e.game === 'packet-tracer' && e.difficulty === 'medium' && e.score >= 700); },
   gold_wolf(all)   { return all.some(e => e.game === 'packet-tracer' && e.difficulty === 'hard' && e.score >= 800); },
 
   // VLAN Master
   iron_deer(all)   { return all.some(e => e.game === 'vlan-master'); },
   bronze_deer(all) { return all.some(e => e.game === 'vlan-master' && e.score >= 500); },
+  silver_deer(all) { return all.some(e => e.game === 'vlan-master' && e.difficulty === 'medium' && e.score >= 700); },
   gold_deer(all)   { return all.some(e => e.game === 'vlan-master' && e.difficulty === 'hard' && e.score >= 800); }
 };
 
