@@ -309,29 +309,29 @@ function getDifficultySubtitles(type) {
   const lang = i18n.getLang();
   const subtitles = {
     osi: {
-      easy:   lang === 'fr' ? '7 > 1 + INDICES'        : '7 > 1 + HINTS',
-      medium: lang === 'fr' ? '1 > 7 SANS INDICES'     : '1 > 7 NO HINTS',
-      hard:   lang === 'fr' ? 'ALEATOIRE + TIMER'       : 'RANDOM + TIMER'
+      easy:   lang === 'fr' ? '7 > 1 + INDICES'      : '7 > 1 + HINTS',
+      medium: lang === 'fr' ? '7 > 1 SANS INDICES'   : '7 > 1 NO HINTS',
+      hard:   lang === 'fr' ? '7 > 1 TIMER 45s'      : '7 > 1 TIMER 45s'
     },
     tcpip: {
-      easy:   lang === 'fr' ? '4 > 1 + INDICES' : '4 > 1 + HINTS',
-      medium: lang === 'fr' ? '4 COUCHES SANS INDICE' : '4 LAYERS NO HINTS',
-      hard:   lang === 'fr' ? 'ALEATOIRE + TIMER' : 'RANDOM + TIMER'
+      easy:   lang === 'fr' ? '1 > 4 + INDICES'      : '1 > 4 + HINTS',
+      medium: lang === 'fr' ? '1 > 4 SANS INDICES'   : '1 > 4 NO HINTS',
+      hard:   lang === 'fr' ? '1 > 4 TIMER 45s'      : '1 > 4 TIMER 45s'
     },
     handshake: {
       easy:   '3 STEPS',
       medium: '7 STEPS',
-      hard:   '10 STEPS + TIMER'
+      hard:   '10 STEPS + TIMER 45s'
     },
     dhcp: {
-      easy:   lang === 'fr' ? 'NOM + DETAILS'  : 'NAME + DETAILS',
-      medium: lang === 'fr' ? 'NOM SEULEMENT'  : 'NAME ONLY',
-      hard:   lang === 'fr' ? 'LETTRE + TIMER' : 'LETTER + TIMER'
+      easy:   lang === 'fr' ? 'NOM + DETAILS'        : 'NAME + DETAILS',
+      medium: lang === 'fr' ? 'NOM SEULEMENT'        : 'NAME ONLY',
+      hard:   lang === 'fr' ? 'LETTRE + TIMER 45s'   : 'LETTER + TIMER 45s'
     },
     encap: {
-      easy:   lang === 'fr' ? '5 ELEMENTS + DESC'  : '5 ELEMENTS + DESC',
-      medium: lang === 'fr' ? 'NOMS TECHNIQUES'    : 'TECHNICAL NAMES',
-      hard:   lang === 'fr' ? 'COURT + TIMER 30s'  : 'SHORT + TIMER 30s'
+      easy:   lang === 'fr' ? '5 ELEMENTS + DESC'    : '5 ELEMENTS + DESC',
+      medium: lang === 'fr' ? 'NOMS TECHNIQUES'      : 'TECHNICAL NAMES',
+      hard:   lang === 'fr' ? 'COURT + TIMER 30s'    : 'SHORT + TIMER 30s'
     }
   };
   return subtitles[type] || { easy: 'EASY', medium: 'MEDIUM', hard: 'HARD' };
@@ -349,21 +349,13 @@ function startGame(difficulty) {
   let slotOrder;
   let timerLimit = null;
 
-  if (difficulty === 'easy') {
-    // OSI easy: slots 7 down to 1 (Application at top, Physical at bottom)
-    // All other types: slots 1 to N (natural top-to-bottom order)
-    slotOrder = type === 'osi'
-      ? [7, 6, 5, 4, 3, 2, 1]
-      : items.map(item => item.num);
-  } else if (difficulty === 'medium') {
-    // OSI medium: slots 1 to 7 (Physical at top — player must know the direction)
-    // All other types: slots 1 to N
-    slotOrder = type === 'osi'
-      ? [1, 2, 3, 4, 5, 6, 7]
-      : items.map(item => item.num);
-  } else {
-    // Hard: random slot order + countdown timer
-    slotOrder = shuffleArray(items.map(item => item.num));
+  // Slot order never changes — always 7→1 for OSI, 1→N for all other types.
+  // Difficulty affects only the amount of info shown on pieces/slots and the timer.
+  slotOrder = type === 'osi'
+    ? [7, 6, 5, 4, 3, 2, 1]
+    : items.map(item => item.num);
+
+  if (difficulty === 'hard') {
     timerLimit = type === 'encap' ? 30 : 45;
   }
 
@@ -490,8 +482,8 @@ function renderSlots() {
     } else if (osiState.difficulty === 'medium') {
       slotContent = `<span class="osi-slot__num">${num}</span>`;
     } else {
-      // Hard: show the slot number but no label hint — player must know which
-      // layer name / step corresponds to which number, from memory
+      // Hard: same as medium — slot shows number only, no label.
+      // Difficulty comes from the timer, not from hidden slots.
       slotContent = `<span class="osi-slot__num">${num}</span>`;
     }
 
