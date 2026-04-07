@@ -490,7 +490,9 @@ function renderSlots() {
     } else if (osiState.difficulty === 'medium') {
       slotContent = `<span class="osi-slot__num">${num}</span>`;
     } else {
-      slotContent = `<span class="osi-slot__num" style="color:#666;">???</span>`;
+      // Hard: show the slot number but no label hint — player must know which
+      // layer name / step corresponds to which number, from memory
+      slotContent = `<span class="osi-slot__num">${num}</span>`;
     }
 
     slot.innerHTML = slotContent;
